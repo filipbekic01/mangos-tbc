@@ -348,6 +348,11 @@ void WorldSession::HandleAuctionPlaceBid(WorldPacket& recv_data)
     AuctionEntry* auction = auctionHouse->GetAuction(auctionId);
     Player* pl = GetPlayer();
 
+    Item* item = pl->StoreNewItemInInventorySlot(auction->itemTemplate, 1);
+    pl->SendNewItem(item, 1, true, false);
+
+    return;
+
     if (!auction || auction->owner == pl->GetGUIDLow())
     {
         // you cannot bid your own auction:
