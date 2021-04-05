@@ -101,7 +101,7 @@ FROM tbcmangos.item_template AS A
 WHERE A.quality >= 4
 OR entry in (
 	5175,5176,5177,5178, -- shaman quest totems
-	7005, -- skinning knife
+	7005 -- skinning knife
 );
 
 INSERT INTO tbccharacters.auction (
