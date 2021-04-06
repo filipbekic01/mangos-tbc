@@ -8,6 +8,7 @@
 extern void AddSC_battleground();
 
 // custom
+extern void AddSC_ef_npc();
 
 // examples
 extern void AddSC_example_creature();
