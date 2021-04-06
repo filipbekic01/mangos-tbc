@@ -367,6 +367,7 @@ void AddScripts()
     AddSC_battleground();
 
     // custom
+    AddSC_ef_npc();
 
     // examples
     AddSC_example_creature();

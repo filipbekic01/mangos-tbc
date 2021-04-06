@@ -413,3 +413,8 @@ INSERT INTO tbcmangos.gameobject (id,`map`,spawnMask,position_x,position_y,posit
 (181626,0,1,-9498.31,62.6857,56.4076,6.02268,0.0,0.0,0.129885,-0.991529,25,25,100,1),
 (176785,0,1,-9496.99,71.2138,56.4085,6.08551,0.0,0.0,0.0986753,-0.99512,25,25,100,1),
 (337,0,1,-9499.09,62.2787,58.1643,6.07,0.0,0.0,0.106389,-0.994325,25,25,100,1);
+
+
+REPLACE INTO creature_template (entry, NAME, subname, minlevel, maxlevel, modelid1, faction, creaturetype, npcflags, unitflags, extraflags, unitclass)
+VALUES
+(995070, "ef npc cpp script", "Clara's Company", 70,70,25523,35,7,1,0,0,0);
