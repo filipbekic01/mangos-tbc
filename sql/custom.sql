@@ -78,7 +78,7 @@ VALUES
 (909001, "John", "Clara's Company", 41, 41, 308, 35, 7, 0, 0, 1, 55250),
 (909002, "William", "Clara's Company", 44, 44, 308, 35, 7, 0, 0, 1, 2267),
 (909003, "Henry", "Clara's Company", 41, 49, 89, 35, 7, 0, 0, 1, 0),
-(909004, "Kodo Carrier", "Clara's Company", 70, 70, 7933, 35, 7, 0, 0, 1, 0),
+(909004, "Kodo Carrier", "Clara's Company", 70, 70, 7933, 35, 7, 0, 0, 1, 0);
 
 
 REPLACE INTO creature_template (entry, NAME, subname, minlevel, maxlevel, modelid1, faction, 
