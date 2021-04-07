@@ -31,6 +31,6 @@ void AddSC_ef_npc()
     Script *script = new Script;
     script->Name = "ef_npc";
     script->pGossipHello = &GossipHello_ef_npc;
-    script->pGossipSelect = &GossipSelect_npc_mistress_nagmara;
+    script->pGossipSelect = &GossipSelect_ef_npc;
     script->RegisterSelf();
 }
