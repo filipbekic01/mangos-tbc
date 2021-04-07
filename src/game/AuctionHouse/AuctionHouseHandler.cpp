@@ -348,7 +348,7 @@ void WorldSession::HandleAuctionPlaceBid(WorldPacket& recv_data)
     AuctionEntry* auction = auctionHouse->GetAuction(auctionId);
     Player* pl = GetPlayer();
 
-    Item* item = pl->StoreNewItemInInventorySlot(auction->itemTemplate, 1);
+    Item* item = pl->StoreNewItemInInventorySlot(auction->itemTemplate, auction->itemCount);
     pl->SendNewItem(item, 1, true, false);
 
     return;

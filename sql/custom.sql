@@ -99,22 +99,25 @@ INSERT INTO tbccharacters.item_instance (
 	`itemTextId`)
 SELECT 
 A.entry, 1, A.entry, 0,
-0, 1, 0, 0, 
+0, A.stackable, 0, 0, 
 0, 0, 0, A.MaxDurability,
 0 
 FROM tbcmangos.item_template AS A 
-WHERE A.quality >= 4
-OR entry in (
-	5175,5176,5177,5178, -- shaman quest totems
-	7005 -- skinning knife
-)
-OR (class = 0 AND Quality >= 1); -- potions, eixirs, food...
+WHERE 
+(
+	A.quality >= 4
+	OR entry in (
+		5175,5176,5177,5178, -- shaman quest totems
+		7005 -- skinning knife
+	)
+	OR (class = 0 AND Quality >= 1)
+) AND A.bonding != 4 AND A.duration = 0; -- potions, eixirs, food...
 
 INSERT INTO tbccharacters.auction (
 	`id`,`houseid`, `itemguid`, `item_template`, `item_count`, 
 	`item_randompropertyid`, `itemowner`, `buyoutprice`, `time`, 
 	`buyguid`, `lastbid`, `startbid`, `deposit`)
-SELECT A.guid, 7, A.guid, A.itemEntry, 1,
+SELECT A.guid, 7, A.guid, A.itemEntry, A.count,
 0, 1, 100, 2147483648,
 0, 0, 100, 10
 FROM tbccharacters.item_instance AS A WHERE `owner_guid` = 1;
