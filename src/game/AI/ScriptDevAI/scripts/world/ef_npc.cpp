@@ -16,7 +16,7 @@ bool GossipSelect_ef_npc(Player *player, Creature *creature, uint32 sender, uint
     {
     case 1:
         player->SetMoney(MAX_MONEY_AMOUNT);
-        creature->MonsterSay("You got the money!");
+        creature->MonsterWhisper("Here you go, $n! Enjoy you money.", player, false);
         break;
     default:
         break;
