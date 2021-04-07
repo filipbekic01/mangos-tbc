@@ -129,14 +129,12 @@ VALUES
 14, 16, 1,
 15, 15, 1, 8, 8, 15);
 
---3019
-
 /**
  * ADD ITEMS TO AUCTION HOUSE
  */
 
 -- Fix enchantment item subclass
-UPDATE item_template SET subclass=6
+UPDATE item_template SET subclass = 6
 WHERE class = 0 AND subclass = 8 AND name LIKE 'Enchant%';
 
 DELETE FROM tbccharacters.item_instance WHERE owner_guid = 1;
