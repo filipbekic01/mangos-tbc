@@ -108,8 +108,7 @@ OR entry in (
 	5175,5176,5177,5178, -- shaman quest totems
 	7005 -- skinning knife
 )
-OR class = 0 -- potions, eixirs, food...
-;
+OR class = 0; -- potions, eixirs, food...
 
 INSERT INTO tbccharacters.auction (
 	`id`,`houseid`, `itemguid`, `item_template`, `item_count`, 
@@ -119,6 +118,20 @@ SELECT A.guid, 7, A.guid, A.itemEntry, 1,
 0, 1, 100, 2147483648,
 0, 0, 100, 10
 FROM tbccharacters.item_instance AS A WHERE `owner_guid` = 1;
+
+/**
+ * Remove item requirements
+ */
+
+UPDATE item_template SET
+	RequiredCityRank = 0,
+	RequiredDisenchantSkill = 0,
+	requiredhonorrank = 0,
+	RequiredReputationFaction = 0,
+	RequiredReputationRank  = 0,
+	RequiredSkill = 0,
+	RequiredSkillRank = 0,
+	requiredspell = 0;
 
 /**
  * PLAYER CREATE INFO
