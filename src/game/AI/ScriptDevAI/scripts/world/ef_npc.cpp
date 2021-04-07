@@ -5,6 +5,7 @@
 bool GossipHello_ef_npc(Player *player, Creature *creature)
 {
     player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.2", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
     player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetObjectGuid());
 
     return true;
