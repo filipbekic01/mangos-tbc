@@ -80,12 +80,21 @@ VALUES
 (909003, "Henry", "Clara's Company", 41, 49, 89, 35, 7, 0, 0, 1, 0),
 (909004, "Kodo Carrier", "Clara's Company", 70, 70, 7933, 35, 7, 0, 0, 1, 0);
 
-
 REPLACE INTO creature_template (entry, NAME, subname, minlevel, maxlevel, modelid1, faction, 
 	creaturetype, npcflags, unitflags, extraflags, unitclass,ScriptName,EquipmentTemplateId)
 VALUES
-(999888, "Jasmine", "Clara's Company", 70,70,25523,35,7,1,0,0,0,'ef_npc',14847),
-(999889, "Training Dummy", "Clara's Company", 70, 70, 3019, 35, 7, 0, 0, 1, 0, 'npc_targetDummy',0);
+(999888, "Jasmine", "Clara's Company", 70,70,25523,35,7,1,0,0,0,'ef_npc',14847);
+
+REPLACE INTO creature_template (entry, NAME, subname, minlevel, maxlevel, modelid1, faction, 
+	creaturetype, npcflags, unitflags, extraflags, unitclass,ScriptName,EquipmentTemplateId,
+	RegenerateStats, DynamicFlags,Expansion,
+	HealthMultiplier, PowerMultiplier, ArmorMultiplier, MinLevelHealth, MaxLevelHealth, Armor)
+VALUES
+(999889, "Training Dummy", "Clara's Company", 70, 70, 16074, 1095, 9, 0, 0, 66, 2, 'npc_targetDummy',0,
+14, 16, 1,
+15, 15, 1, 8, 8, 15);
+
+--3019
 
 /**
  * ADD ITEMS TO AUCTION HOUSE
