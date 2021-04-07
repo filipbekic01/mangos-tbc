@@ -9,6 +9,7 @@ extern void AddSC_battleground();
 
 // custom
 extern void AddSC_ef_npc();
+extern void AddSC_targetDummy();
 
 // examples
 extern void AddSC_example_creature();
@@ -368,6 +369,7 @@ void AddScripts()
 
     // custom
     AddSC_ef_npc();
+    AddSC_targetDummy();
 
     // examples
     AddSC_example_creature();
