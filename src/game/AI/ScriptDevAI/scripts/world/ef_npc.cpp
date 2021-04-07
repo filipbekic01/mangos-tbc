@@ -2,11 +2,9 @@
 #include "Entities/Object.h"
 #include "Entities/ObjectGuid.h"
 
-#define GIVE_GOLD 1
-
 bool GossipHello_ef_npc(Player *player, Creature *creature)
 {
-    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.", GOSSIP_SENDER_MAIN, GIVE_GOLD);
+    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.", GOSSIP_SENDER_MAIN, 1);
     player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetObjectGuid());
 
     return true;
@@ -16,8 +14,9 @@ bool GossipSelect_ef_npc(Player *player, Creature *creature, uint32 sender, uint
 {
     switch (action)
     {
-    case GIVE_GOLD:
+    case 1:
         player->SetMoney(MAX_MONEY_AMOUNT);
+        creature->MonsterSay("You got the money!");
         break;
     default:
         break;
