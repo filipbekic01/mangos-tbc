@@ -108,7 +108,7 @@ OR entry in (
 	5175,5176,5177,5178, -- shaman quest totems
 	7005 -- skinning knife
 )
-OR class = 0; -- potions, eixirs, food...
+OR (class = 0 AND Quality >= 1); -- potions, eixirs, food...
 
 INSERT INTO tbccharacters.auction (
 	`id`,`houseid`, `itemguid`, `item_template`, `item_count`, 
