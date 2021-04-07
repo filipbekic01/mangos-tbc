@@ -53,6 +53,41 @@ VALUES
 (995084, "Riding Trainer", "Clara's Company", 70,70,3274,35,7,18,4608,2,1,1,0,1131,0, 0),
 (995095, "Pet Trainer", "Clara's Company", 70,70,5043,35,7,19,4608,2,1,3,3,100,0, 0);
 
+REPLACE INTO npc_trainer VALUES (26327,7328,0,0,0,12,0); -- redemption
+REPLACE INTO npc_trainer VALUES (26327,34767,0,0,0,60,0); -- charger
+REPLACE INTO npc_trainer VALUES (26327,23214,0,0,0,60,0); -- charger
+
+REPLACE INTO npc_trainer VALUES (26326,28272,0,0,0,60,0); -- pig
+REPLACE INTO npc_trainer VALUES (26326,28271,0,0,0,60,0); -- turtle
+
+REPLACE INTO npc_trainer VALUES (26331,688,0,0,0,5,0); -- imp
+REPLACE INTO npc_trainer VALUES (26331,697,0,0,0,10,0); -- void
+REPLACE INTO npc_trainer VALUES (26331,712,0,0,0,20,0); -- bus
+REPLACE INTO npc_trainer VALUES (26331,691,0,0,0,29,0); -- felhunter
+REPLACE INTO npc_trainer VALUES (26331,1122,0,0,0,50,0); -- infernal
+REPLACE INTO npc_trainer VALUES (26331,603,0,0,0,60,0); -- doom
+REPLACE INTO npc_trainer VALUES (26331,23161,0,0,0,60,0); -- dreadsteed
+
+REPLACE INTO npc_trainer VALUES (26332,20252,0,0,0,30,0); -- berserker
+REPLACE INTO npc_trainer VALUES (26332,2458,0,0,0,30,0); -- intercept
+REPLACE INTO npc_trainer VALUES (26332,71,0,0,0,10,0); -- defense
+
+REPLACE INTO npc_trainer VALUES (26330,58753,0,0,0,10,0); -- earth totem
+REPLACE INTO npc_trainer VALUES (26330,3599,0,0,0,16,0); -- fire totem
+REPLACE INTO npc_trainer VALUES (26330,5394,0,0,0,30,0); -- water totem
+
+REPLACE INTO npc_trainer VALUES (26325,883,0,0,0,10,0); -- call pet
+REPLACE INTO npc_trainer VALUES (26325,5149,0,0,0,10,0); -- train pet
+REPLACE INTO npc_trainer VALUES (26325,6991,0,0,0,10,0); -- feed pet
+REPLACE INTO npc_trainer VALUES (26325,982,0,0,0,10,0); -- revive pet
+REPLACE INTO npc_trainer VALUES (26325,2641,0,0,0,10,0); -- dismiss pet
+REPLACE INTO npc_trainer VALUES (26325,1515,0,0,0,10,0); -- tame beast
+
+REPLACE INTO npc_trainer VALUES (26324,5487,0,0,0,10,0); -- bear form
+REPLACE INTO npc_trainer VALUES (26324,8946,0,0,0,14,0); -- poison
+REPLACE INTO npc_trainer VALUES (26324,1066,0,0,0,18,0); -- aquatic form
+REPLACE INTO npc_trainer VALUES (26324,40120,0,0,0,70,0); -- flight form
+
 REPLACE INTO npc_trainer VALUES (995083,196,0,0,0,1,0); -- 1h axes
 REPLACE INTO npc_trainer VALUES (995083,197,0,0,0,1,0); -- 2h axes
 REPLACE INTO npc_trainer VALUES (995083,198,0,0,0,1,0); -- 1h maces
@@ -428,7 +463,8 @@ INSERT INTO tbcmangos.creature (id,`map`,spawnMask,modelid,equipment_id,position
 (909003,0,1,0,0,-9512.13,66.5983,58.4329,5.70506,25,25,0.0,0,0,0,0,0),
 (909002,0,1,0,2267,-9512.1,62.8423,58.3769,0.610967,25,25,0.0,0,0,0,0,0),
 (909004,0,1,0,0,-9508.32,77.9475,58.8117,5.2314,25,25,0.0,0,0,0,0,0),
-(999888,0,1,0,14847,-9465.85,74.902,56.71,4.808,25,25,0,0,0,0,0,0);
+(999888,0,1,0,14847,-9465.85,74.902,56.71,4.808,25,25,0,0,0,0,0,0),
+(999889,0,1,0,0,-9474.78,98.3929,57.0861,3.15942,25,25,0,0,0,0,0,0);
 
 /**
  * SPAWN OBJECTS
