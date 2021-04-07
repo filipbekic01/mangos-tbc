@@ -1,5 +1,5 @@
 /**
- *	NPC EQUIPMENT
+ * CREATE NPC EQUIPMENT
  */
 
 REPLACE INTO creature_equip_template (entry, equipentry1, equipentry2, equipentry3)
@@ -16,7 +16,7 @@ VALUES
 (200208, 19019, 22819, 0); -- warrior: thunder fury + shield of condemnation
 
 /**
- *	TRAINERS
+ * CREATE TRAINERS
  */
 
 UPDATE creature_template SET EquipmentTemplateId = 200200, ModelId1 = 1756 WHERE Entry = 26324; -- druid trainer
@@ -68,7 +68,7 @@ REPLACE INTO npc_trainer VALUES (995083,1180,0,0,0,1,0); -- daggers
 REPLACE INTO npc_trainer VALUES (995083,5011,0,0,0,1,0); -- crossbows
 
 /**
- *	CLARA'S COMPANY
+ *CREATE CLARA'S COMPANY
  */
 
 REPLACE INTO creature_template (entry, NAME, subname, minlevel, maxlevel, modelid1, faction, 
@@ -80,8 +80,13 @@ VALUES
 (909003, "Henry", "Clara's Company", 41, 49, 89, 35, 7, 0, 0, 1, 0),
 (909004, "Kodo Carrier", "Clara's Company", 70, 70, 7933, 35, 7, 0, 0, 1, 0);
 
+REPLACE INTO creature_template (entry, NAME, subname, minlevel, maxlevel, modelid1, faction, 
+	creaturetype, npcflags, unitflags, extraflags, unitclass,ScriptName,EquipmentTemplateId)
+VALUES
+(999888, "Jasmine", "Clara's Company", 70,70,25523,35,7,1,0,0,0,'ef_npc',14847);
+
 /**
- *	AUCTION HOUSE
+ * ADD ITEMS TO AUCTION HOUSE
  */
 
 DELETE FROM tbccharacters.item_instance WHERE owner_guid = 1;
@@ -127,7 +132,7 @@ UPDATE `playercreateinfo` SET
 
 
 /**
- *	CLEAR ELWYNN FOREST
+ * DELETE ORIGINAL ELWYNN FOREST NPCS
  */
 
 DELETE FROM creature WHERE guid=80334;
@@ -363,10 +368,11 @@ DELETE FROM creature_battleground WHERE guid=80283;
 DELETE FROM creature_linking WHERE guid=80283 OR master_guid=80283;
 
 /**
- * SUMMON NPCS
+ * SPAWN NPCS
  */
 
-INSERT INTO tbcmangos.creature (id,`map`,spawnMask,modelid,equipment_id,position_x,position_y,position_z,orientation,spawntimesecsmin,spawntimesecsmax,spawndist,currentwaypoint,curhealth,curmana,DeathState,MovementType) VALUES
+INSERT INTO tbcmangos.creature (id,`map`,spawnMask,modelid,equipment_id,position_x,position_y,position_z,orientation,
+	spawntimesecsmin,spawntimesecsmax,spawndist,currentwaypoint,curhealth,curmana,DeathState,MovementType) VALUES
 (13876,0,1,0,0,-9509.51,89.7891,59.6514,5.23918,25,25,0.0,0,0,0,0,0),
 (26325,0,1,0,200201,-9466.17,-0.455909,56.9497,6.15496,25,25,0.0,0,0,0,0,0),
 (26324,0,1,0,200200,-9463.66,13.1043,56.9625,2.03162,25,25,0.0,0,0,0,0,0),
@@ -400,21 +406,18 @@ INSERT INTO tbcmangos.creature (id,`map`,spawnMask,modelid,equipment_id,position
 (909001,0,1,0,55250,-9504.16,76.2397,57.7099,2.86977,25,25,0.0,0,0,0,0,0),
 (909003,0,1,0,0,-9512.13,66.5983,58.4329,5.70506,25,25,0.0,0,0,0,0,0),
 (909002,0,1,0,2267,-9512.1,62.8423,58.3769,0.610967,25,25,0.0,0,0,0,0,0),
-(909004,0,1,0,0,-9508.32,77.9475,58.8117,5.2314,25,25,0.0,0,0,0,0,0);
+(909004,0,1,0,0,-9508.32,77.9475,58.8117,5.2314,25,25,0.0,0,0,0,0,0),
+(999888,0,1,0,14847,-9498.4,59.1129,56.3676,6.00428,25,25,0,0,0,0,0,0);
 
 /**
- * SUMMON OBJECTS
+ * SPAWN OBJECTS
  */
 
-INSERT INTO tbcmangos.gameobject (id,`map`,spawnMask,position_x,position_y,position_z,orientation,rotation0,rotation1,rotation2,rotation3,spawntimesecsmin,spawntimesecsmax,animprogress,state) VALUES
+INSERT INTO tbcmangos.gameobject (id,`map`,spawnMask,position_x,position_y,position_z,orientation,rotation0,rotation1,
+	rotation2,rotation3,spawntimesecsmin,spawntimesecsmax,animprogress,state) VALUES
 (211018,0,1,-9497.72,62.1217,57.1309,6.10076,0.0,0.0,0.0910874,-0.995843,25,25,100,1),
 (186672,0,1,-9497.46,69.5714,56.3585,5.63509,0.0,0.0,0.318408,-0.947954,25,25,100,1),
 (181626,0,1,-9499.12,59.9494,56.4847,4.37702,0.0,0.0,0.815204,-0.579174,25,25,100,1),
 (181626,0,1,-9498.31,62.6857,56.4076,6.02268,0.0,0.0,0.129885,-0.991529,25,25,100,1),
 (176785,0,1,-9496.99,71.2138,56.4085,6.08551,0.0,0.0,0.0986753,-0.99512,25,25,100,1),
 (337,0,1,-9499.09,62.2787,58.1643,6.07,0.0,0.0,0.106389,-0.994325,25,25,100,1);
-
-
-REPLACE INTO creature_template (entry, NAME, subname, minlevel, maxlevel, modelid1, faction, creaturetype, npcflags, unitflags, extraflags, unitclass)
-VALUES
-(995070, "ef npc cpp script", "Clara's Company", 70,70,25523,35,7,1,0,0,0);
