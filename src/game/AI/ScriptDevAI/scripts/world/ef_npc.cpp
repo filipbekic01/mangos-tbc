@@ -4,8 +4,9 @@
 
 bool GossipHello_ef_npc(Player *player, Creature *creature)
 {
-    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.2", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Add Gold", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_INTERACT_1, "Repair All Items", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_INTERACT_2, "Repair All Items", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
     player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetObjectGuid());
 
     return true;
@@ -17,6 +18,12 @@ bool GossipSelect_ef_npc(Player *player, Creature *creature, uint32 /*uiSender*/
     {
         player->SetMoney(MAX_MONEY_AMOUNT);
         creature->MonsterWhisper("Here you go, $n! Enjoy you money.", player, false);
+    }
+
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 2)
+    {
+        player->DurabilityRepairAll(false, 0, false);
+        creature->MonsterWhisper("Repaired all items.", player, false);
     }
 
     player->CLOSE_GOSSIP_MENU();
