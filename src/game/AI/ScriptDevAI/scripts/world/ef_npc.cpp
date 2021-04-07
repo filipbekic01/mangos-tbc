@@ -26,7 +26,7 @@ bool GossipSelect_ef_npc(Player *player, Creature *creature, uint32 /*uiSender*/
         creature->MonsterWhisper("Repaired all items.", player, false);
     }
 
-    // player->CLOSE_GOSSIP_MENU();
+    player->CLOSE_GOSSIP_MENU();
 
     return true;
 }
