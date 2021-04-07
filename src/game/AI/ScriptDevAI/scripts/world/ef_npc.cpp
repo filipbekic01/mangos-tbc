@@ -4,23 +4,21 @@
 
 bool GossipHello_ef_npc(Player *player, Creature *creature)
 {
-    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.", GOSSIP_SENDER_MAIN, 1);
+    player->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_MONEY_BAG, "Give me more money.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetObjectGuid());
 
     return true;
 }
 
-bool GossipSelect_ef_npc(Player *player, Creature *creature, uint32 sender, uint32 action)
+bool GossipSelect_ef_npc(Player *player, Creature *creature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    switch (action)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
-    case 1:
         player->SetMoney(MAX_MONEY_AMOUNT);
         creature->MonsterWhisper("Here you go, $n! Enjoy you money.", player, false);
-        break;
-    default:
-        break;
     }
+
+    player->CLOSE_GOSSIP_MENU();
 
     return true;
 }
@@ -31,5 +29,5 @@ void AddSC_ef_npc()
     script->Name = "ef_npc";
     script->pGossipHello = &GossipHello_ef_npc;
     script->pGossipSelect = &GossipSelect_ef_npc;
-    script->RegisterSelf();
+    script->RegisterSelf(false);
 }
