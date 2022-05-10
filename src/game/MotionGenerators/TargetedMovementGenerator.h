@@ -140,6 +140,8 @@ class ChaseMovementGenerator : public TargetedMovementGeneratorMedium<Unit, Chas
 
         std::pair<std::string, std::string> GetPrintout() const;
 
+        void AddDelay();
+
     protected:
         float GetDynamicTargetDistance(Unit& owner, bool forRangeCheck) const override;
         void HandleTargetedMovement(Unit& owner, const uint32& time_diff) override;
@@ -154,7 +156,9 @@ class ChaseMovementGenerator : public TargetedMovementGeneratorMedium<Unit, Chas
         virtual bool _getLocation(Unit& owner, float& x, float& y, float& z) const;
         virtual void _setLocation(Unit& owner);
 
-        bool DispatchSplineToPosition(Unit& owner, float x, float y, float z, bool walk, bool cutPath, bool target = false);
+        bool IsReachablePositionToTarget(Unit& owner, float x, float y, float z, Unit& target);
+
+        bool DispatchSplineToPosition(Unit& owner, float x, float y, float z, bool walk, bool cutPath, bool target = false, bool checkReachable = false);
         void CutPath(Unit& owner, PointsArray& path);
         void Backpedal(Unit& owner);
 
@@ -175,9 +179,9 @@ class ChaseMovementGenerator : public TargetedMovementGeneratorMedium<Unit, Chas
 class FollowMovementGenerator : public TargetedMovementGeneratorMedium<Unit, FollowMovementGenerator>
 {
     public:
-        FollowMovementGenerator(Unit& target, float offset, float angle, bool main, bool possess)
-            : TargetedMovementGeneratorMedium<Unit, FollowMovementGenerator>(target, offset, angle), m_main(main),
-            m_targetMoving(false), m_targetFaced(false), m_possess(possess)
+        FollowMovementGenerator(Unit& target, float offset, float angle, bool main, bool possess, bool alwaysBoost = false)
+            : TargetedMovementGeneratorMedium<Unit, FollowMovementGenerator>(target, offset, angle),
+              m_main(main), m_possess(possess), m_boost(alwaysBoost), m_targetMoving(false), m_targetFaced(false)
         {
             i_faceTarget = (angle == 0.0f);
         }
@@ -219,21 +223,49 @@ class FollowMovementGenerator : public TargetedMovementGeneratorMedium<Unit, Fol
 
         virtual bool Move(Unit& owner, float x, float y, float z);
 
-    private:
+    protected:
         virtual bool _getOrientation(Unit& owner, float& o) const;
         virtual bool _getLocation(Unit& owner, float& x, float& y, float& z, bool movingNow) const;
         virtual void _setOrientation(Unit& owner);
         virtual void _setLocation(Unit& owner, bool movingNow);
 
-        static inline uint32 _getPollRateBase() { return 250; }
-        static inline uint32 _getPollRateMax() { return 1000; }
+        static inline uint32 _getPollRateBase() { return 400; }
+        static inline uint32 _getPollRateMax() { return 800; }
         virtual uint32 _getPollRateMultiplier(Unit& owner, bool targetMovingNow, bool targetMovedBefore = true) const;
         virtual uint32 _getPollRate(Unit& owner, bool movingNow, bool movingBefore = true) const;
 
         bool m_main;
+        bool m_possess;
+        bool m_boost;
+
         bool m_targetMoving;
         bool m_targetFaced;
-        bool m_possess;
+};
+
+// to be able to compute new path before the end of the current path (in milliseconds)
+#define FORMATION_FOLLOWERS_CHECK_OVERRIDE 400
+
+class FormationMovementGenerator : public FollowMovementGenerator
+{
+    public:
+        FormationMovementGenerator(FormationSlotDataSPtr& sData, bool main);
+        ~FormationMovementGenerator();
+
+        MovementGeneratorType GetMovementGeneratorType() const override { return FORMATION_MOTION_TYPE; }
+
+        virtual bool Update(Unit&, const uint32&) override;
+
+    protected:
+        void HandleTargetedMovement(Unit& owner, const uint32& time_diff) override;
+        void HandleFinalizedMovement(Unit& owner) override;
+
+    private:
+        virtual void _setLocation(Unit& owner, bool catchup) override;
+        float BuildPath(Unit& owner, PointsArray& path);
+        bool HandleMasterDistanceCheck(Unit& owner, const uint32& time_diff);
+        FormationSlotDataSPtr m_slot;
+        bool m_headingToMaster;
+        float m_lastAngle;
 };
 
 #endif

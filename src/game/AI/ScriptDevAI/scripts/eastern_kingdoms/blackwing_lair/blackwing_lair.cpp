@@ -69,7 +69,6 @@ void instance_blackwing_lair::OnCreatureCreate(Creature* pCreature)
             else
                 m_uiBlackwingDefCount++;
             // Egg room defenders attack players and Razorgore on spawn
-            pCreature->SetInCombatWithZone();
             m_lDefendersGuids.push_back(pCreature->GetObjectGuid());
             break;
         // Nefarian encounter
@@ -86,7 +85,6 @@ void instance_blackwing_lair::OnCreatureCreate(Creature* pCreature)
         case NPC_BLUE_DRAKONID:
         case NPC_BRONZE_DRAKONID:
         case NPC_CHROMATIC_DRAKONID:
-            pCreature->SetInCombatWithZone();
             m_drakonids.push_back(pCreature->GetObjectGuid());
             break;
         case NPC_LORD_VICTOR_NEFARIUS:
@@ -422,11 +420,28 @@ void instance_blackwing_lair::OnCreatureRespawn(Creature* creature)
     {
         creature->SetNoLoot(true);
         creature->SetCorpseDelay(5);
+        return;
     }
-    else if (creature->GetEntry() == NPC_GRETHOK_CONTROLLER)
-        if (Creature* razorgore = GetSingleCreatureFromStorage(NPC_RAZORGORE))
-            if (GetData(TYPE_RAZORGORE) == FAIL)
-                razorgore->Respawn();
+
+    switch (creature->GetEntry())
+    {
+        case NPC_GRETHOK_CONTROLLER:
+            if (Creature* razorgore = GetSingleCreatureFromStorage(NPC_RAZORGORE))
+                if (GetData(TYPE_RAZORGORE) == FAIL)
+                    razorgore->Respawn();
+            break;
+        case NPC_BLACKWING_LEGIONNAIRE:
+        case NPC_BLACKWING_MAGE:
+        case NPC_DRAGONSPAWN:
+        case NPC_BLACK_DRAKONID:
+        case NPC_RED_DRAKONID:
+        case NPC_GREEN_DRAKONID:
+        case NPC_BLUE_DRAKONID:
+        case NPC_BRONZE_DRAKONID:
+        case NPC_CHROMATIC_DRAKONID:
+            creature->SetInCombatWithZone();
+            break;
+    }
 }
 
 bool instance_blackwing_lair::CheckConditionCriteriaMeet(Player const* pPlayer, uint32 uiInstanceConditionId, WorldObject const* pConditionSource, uint32 conditionSourceType) const
@@ -746,10 +761,12 @@ struct go_ai_suppression : public GameObjectAI
         {
             if (m_uiFumeTimer <= uiDiff)
             {
-                // TODO replace by go->Use(go) or go->Use(nullptr) once GO casting is added in core
                 // The loot state check may be removed in that case because it should probably be handled in the Gameobject::Use() code
                 if (m_go->GetLootState() == GO_READY)
+                {
                     m_go->SendGameObjectCustomAnim(m_go->GetObjectGuid());
+                    m_go->CastSpell(nullptr, nullptr, m_go->GetGOInfo()->trap.spellId, TRIGGERED_OLD_TRIGGERED);
+                }
                 m_uiFumeTimer = 5 * IN_MILLISECONDS;
             }
             else

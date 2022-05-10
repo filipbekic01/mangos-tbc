@@ -153,6 +153,15 @@ struct InhibitMagic : public AuraScript
     }
 };
 
+struct FocusTargetVisual : public AuraScript
+{
+    void OnPersistentAreaAuraEnd(DynamicObject* dynGo) const override
+    {
+        if (Unit* owner = dynGo->GetCaster())
+            owner->CastSpell(nullptr, 32301, TRIGGERED_OLD_TRIGGERED, nullptr, nullptr, dynGo->GetObjectGuid());
+    }
+};
+
 void AddSC_boss_shirrak()
 {
     Script* pNewScript = new Script;
@@ -160,5 +169,6 @@ void AddSC_boss_shirrak()
     pNewScript->GetAI = &GetNewAIInstance<boss_shirrakAI>;
     pNewScript->RegisterSelf();
 
-    RegisterAuraScript<InhibitMagic>("spell_shirrak_inhibit_magic");
+    RegisterSpellScript<InhibitMagic>("spell_shirrak_inhibit_magic");
+    RegisterSpellScript<FocusTargetVisual>("spell_focus_target_visual");
 }

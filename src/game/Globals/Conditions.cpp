@@ -238,9 +238,9 @@ bool inline ConditionEntry::Evaluate(WorldObject const* target, Map const* map, 
             Unit const* unit = static_cast<Unit const*>(target);
             switch (m_value2)
             {
-                case 0: return unit->getLevel() == m_value1;
-                case 1: return unit->getLevel() >= m_value1;
-                case 2: return unit->getLevel() <= m_value1;
+                case 0: return unit->GetLevel() == m_value1;
+                case 1: return unit->GetLevel() >= m_value1;
+                case 2: return unit->GetLevel() <= m_value1;
             }
             return false;
         }
@@ -463,6 +463,20 @@ bool inline ConditionEntry::Evaluate(WorldObject const* target, Map const* map, 
         case CONDITION_WORLD_SCRIPT:
         {
             return sWorldState.IsConditionFulfilled(m_value1, m_value2);
+        }
+        case CONDITION_WORLDSTATE:
+        {
+            int32 variable = map->GetVariableManager().GetVariable(m_value1);
+            switch (m_value2)
+            {
+                case WORLDSTATE_EQUALS: return variable == m_value3;
+                case WORLDSTATE_GREATER: return variable > m_value3;
+                case WORLDSTATE_GREATER_EQUAL: return variable >= m_value3;
+                case WORLDSTATE_LESS: return variable < m_value3;
+                case WORLDSTATE_LESS_EQUAL: return variable <= m_value3;
+                default: break;
+            }
+            return false;
         }
         default:
             break;
@@ -913,6 +927,20 @@ bool ConditionEntry::IsValid() const
         case CONDITION_ACTIVE_HOLIDAY:
         case CONDITION_PVP_SCRIPT:
         case CONDITION_WORLD_SCRIPT:
+            break;
+        case CONDITION_WORLDSTATE:
+            if (m_value2 > WORLDSTATE_SIGN_MAX)
+            {
+                sLog.outErrorDb("Worldstate condition (entry %u, type %u) has invalid sign %u. Skipping.", m_entry, m_condition, m_value2);
+                return false;
+            }
+
+            // only allow named to avoid not knowing what they are for
+            if (!sObjectMgr.HasWorldStateName(m_value1))
+            {
+                sLog.outErrorDb("Worldstate condition (entry %u, type %u) has has no worldstate name assigned for worldstate %u. Skipping.", m_entry, m_condition, m_value1);
+                return false;
+            }
             break;
         default:
             sLog.outErrorDb("Condition entry %u has bad type of %d, skipped ", m_entry, m_condition);

@@ -20,6 +20,7 @@
 #include "WorldPacket.h"
 #include "Server/WorldSession.h"
 #include "Entities/UpdateData.h"
+#include "Maps/MapPersistentStateMgr.h"
 #include "Maps/Map.h"
 #include "Entities/Transports.h"
 #include "Globals/ObjectAccessor.h"
@@ -33,6 +34,7 @@ void VisibleChangesNotifier::Visit(CameraMapType& m)
     for (auto& iter : m)
     {
         iter.getSource()->UpdateVisibilityOf(&i_object);
+        m_unvisitedGuids.erase(iter.getSource()->GetOwner()->GetObjectGuid());
     }
 }
 
@@ -75,9 +77,14 @@ void VisibleNotifier::Notify()
     for (GuidSet::iterator itr = i_clientGUIDs.begin(); itr != i_clientGUIDs.end(); ++itr)
     {
         if (WorldObject* target = player.GetMap()->GetWorldObject(*itr))
+        {
             if (target->GetTypeId() == TYPEID_UNIT)
                 player.BeforeVisibilityDestroy(static_cast<Creature*>(target));
-        player.m_clientGUIDs.erase(*itr);
+            player.RemoveAtClient(target);
+        }
+        else
+            sLog.outCustomLog("Object was %s in current map.", player.GetMap()->m_objRemoveList.find(*itr) == player.GetMap()->m_objRemoveList.end() ? "not found" : "found");
+        
 
         DEBUG_FILTER_LOG(LOG_FILTER_VISIBILITY_CHANGES, "%s is out of range (no in active cells set) now for %s",
                          itr->GetString().c_str(), player.GetGuidStr().c_str());
@@ -221,12 +228,20 @@ void MaNGOS::RespawnDo::operator()(Creature* u) const
     Map* map = u->GetMap();
     if (map->IsBattleGroundOrArena())
     {
-        BattleGroundEventIdx eventId = sBattleGroundMgr.GetCreatureEventIndex(u->GetGUIDLow());
+        BattleGroundEventIdx eventId = sBattleGroundMgr.GetCreatureEventIndex(u->GetDbGuid());
         if (!((BattleGroundMap*)map)->GetBG()->IsActiveEvent(eventId.event1, eventId.event2))
             return;
     }
 
-    u->Respawn();
+    if (u->IsUsingNewSpawningSystem())
+    {
+        if (u->GetMap()->GetMapDataContainer().GetSpawnGroupByGuid(u->GetDbGuid(), TYPEID_UNIT))
+            u->GetMap()->GetPersistentState()->SaveCreatureRespawnTime(u->GetDbGuid(), time(nullptr));
+        else
+            u->GetMap()->GetSpawnManager().RespawnCreature(u->GetDbGuid(), 0);
+    }
+    else
+        u->Respawn();
 }
 
 void MaNGOS::RespawnDo::operator()(GameObject* u) const
@@ -235,7 +250,7 @@ void MaNGOS::RespawnDo::operator()(GameObject* u) const
     Map* map = u->GetMap();
     if (map->IsBattleGroundOrArena())
     {
-        BattleGroundEventIdx eventId = sBattleGroundMgr.GetGameObjectEventIndex(u->GetGUIDLow());
+        BattleGroundEventIdx eventId = sBattleGroundMgr.GetGameObjectEventIndex(u->GetDbGuid());
         if (!((BattleGroundMap*)map)->GetBG()->IsActiveEvent(eventId.event1, eventId.event2))
             return;
     }
@@ -260,7 +275,7 @@ void MaNGOS::CallOfHelpCreatureInRangeDo::operator()(Creature* u)
         return;
 
     if (u->AI())
-        u->AI()->AttackStart(i_enemy);
+        u->AI()->OnCallForHelp(i_funit, i_enemy);
 }
 
 bool MaNGOS::AnyAssistCreatureInRangeCheck::operator()(Creature* u)
