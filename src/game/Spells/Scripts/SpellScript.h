@@ -23,6 +23,8 @@
 #include <map>
 #include <functional>
 
+class DynamicObject;
+
 struct PeriodicTriggerData
 {
     Unit* caster; Unit* target; WorldObject* targetObject;
@@ -59,19 +61,28 @@ struct SpellScript
     // called on target hit after damage deal and proc
     virtual void OnAfterHit(Spell* /*spell*/) const {}
     // called after summoning a creature
-    virtual void OnSummon(Spell* spell, Creature* summon) const {}
+    virtual void OnSummon(Spell* /*spell*/, Creature* /*summon*/) const {}
     // called after summoning a gameobject
-    virtual void OnSummon(Spell* spell, GameObject* summon) const {}
+    virtual void OnSummon(Spell* /*spell*/, GameObject* /*summon*/) const {}
+};
+
+struct AuraCalcData
+{
+    Unit* caster; Unit* target; SpellEntry const* spellProto; SpellEffectIndex effIdx;
+    Aura* aura; // cannot be used in auras that utilize stacking in checkcast - can be nullptr
+    AuraCalcData(Aura* aura, Unit* caster, Unit* target, SpellEntry const* spellProto, SpellEffectIndex effIdx) : aura(aura), caster(caster), target(target), spellProto(spellProto), effIdx(effIdx) {}
 };
 
 struct AuraScript
 {
     // called on SpellAuraHolder creation - caster can be nullptr
     virtual void OnHolderInit(SpellAuraHolder* /*holder*/, WorldObject* /*caster*/) const {}
+    // called after end of aura object constructor
+    virtual void OnAuraInit(Aura* /*aura*/) const {}
     // called during any event that calculates aura modifier amount - caster can be nullptr
-    virtual int32 OnAuraValueCalculate(Aura* /*aura*/, Unit* /*caster*/, int32 value) const { return value; }
+    virtual int32 OnAuraValueCalculate(AuraCalcData& data, int32 value) const { return value; }
     // called during done/taken damage calculation
-    virtual void OnDamageCalculate(Aura* /*aura*/, int32& /*advertisedBenefit*/, float& /*totalMod*/) const {}
+    virtual void OnDamageCalculate(Aura* /*aura*/, Unit* /*victim*/, int32& /*advertisedBenefit*/, float& /*totalMod*/) const {}
     // the following two hooks are done in an alternative fashion due to how they are usually used
     // if an aura is applied before, its removed after, and if some aura needs to do something after aura effect is applied, need to revert that change before its removed
     // called before aura apply and after aura unapply
@@ -85,7 +96,7 @@ struct AuraScript
     // called before proc handler
     virtual SpellAuraProcResult OnProc(Aura* /*aura*/, ProcExecutionData& /*procData*/) const { return SPELL_AURA_PROC_OK; }
     // called on absorb of this aura
-    virtual void OnAbsorb(Aura* /*aura*/, int32& /*currentAbsorb*/, uint32& /*reflectedSpellId*/, int32& /*reflectDamage*/, bool& /*preventedDeath*/) const {}
+    virtual void OnAbsorb(Aura* /*aura*/, int32& /*currentAbsorb*/, int32& /*remainingDamage*/, uint32& /*reflectedSpellId*/, int32& /*reflectDamage*/, bool& /*preventedDeath*/) const {}
     // called on mana shield absorb of this aura
     virtual void OnManaAbsorb(Aura* /*aura*/, int32& /*currentAbsorb*/) const {}
     // called on death prevention
@@ -100,6 +111,18 @@ struct AuraScript
     virtual void OnPeriodicDummy(Aura* /*aura*/) const {}
     // called on periodic tick end
     virtual void OnPeriodicTickEnd(Aura* /*aura*/) const {}
+    // called on persistent area aura dyngo lifetime end
+    virtual void OnPersistentAreaAuraEnd(DynamicObject* /*dynGo*/) const {}
+    // called on unit heartbeat
+    virtual void OnHeartbeat(Aura* /*aura*/) const {}
+    // used to override SPELL_AURA_TRANSFORM display id - more uses in future
+    virtual uint32 GetAuraScriptCustomizationValue(Aura* /*aura*/) const { return 0; }
+};
+
+class ScriptStorage
+{
+    public:
+        virtual ~ScriptStorage() {}
 };
 
 class SpellScriptMgr
@@ -128,26 +151,12 @@ class SpellScriptMgr
 // note - linux name mangling bugs out if two script templates have same class name - avoid it
 
 template <class T>
-void RegisterScript(std::string stringName)
-{
-    static_assert(std::is_base_of<SpellScript, T>::value, "T not derived from SpellScript");
-    static_assert(std::is_base_of<AuraScript, T>::value, "T not derived from AuraScript");
-    SpellScriptMgr::SetSpellScript(stringName, new T());
-    SpellScriptMgr::SetAuraScript(stringName, new T());
-}
-
-template <class T>
 void RegisterSpellScript(std::string stringName)
 {
-    static_assert(std::is_base_of<SpellScript, T>::value, "T not derived from SpellScript");
-    SpellScriptMgr::SetSpellScript(stringName, new T());
-}
-
-template <class U>
-void RegisterAuraScript(std::string stringName)
-{
-    static_assert(std::is_base_of<AuraScript, U>::value, "T not derived from AuraScript");
-    SpellScriptMgr::SetAuraScript(stringName, new U());
+    if constexpr (std::is_base_of<SpellScript, T>::value)
+        SpellScriptMgr::SetSpellScript(stringName, new T());
+    if constexpr (std::is_base_of<AuraScript, T>::value)
+        SpellScriptMgr::SetAuraScript(stringName, new T());
 }
 
 #endif // SPELLSCRIPT_H

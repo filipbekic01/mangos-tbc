@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `db_version`;
 CREATE TABLE `db_version` (
   `version` varchar(120) DEFAULT NULL,
   `creature_ai_version` varchar(120) DEFAULT NULL,
-  `required_s2426_01_mangos_command` bit(1) DEFAULT NULL
+  `required_s2450_01_mangos_quest_maxlevel` bit(1) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Used DB version notes';
 
 --
@@ -452,15 +452,18 @@ INSERT INTO `command` VALUES
 ('damage',3,'Syntax: .damage $damage_amount [$school [$spellid]]\r\n\r\nApply $damage to target. If not $school and $spellid provided then this flat clean melee damage without any modifiers. If $school provided then damage modified by armor reduction (if school physical), and target absorbing modifiers and result applied as melee damage to target. If spell provided then damage modified and applied as spell damage. $spellid can be shift-link.'),
 ('debug anim',2,'Syntax: .debug anim #emoteid\r\n\r\nPlay emote #emoteid for your character.'),
 ('debug arena',3,'Syntax: .debug arena\r\n\r\nToggle debug mode for arenas. In debug mode GM can start arena with single player.'),
+('debug areatriggers', 1, 'Syntax: .debug areatriggers\n\nToggle debug mode for areatriggers. In debug mode GM will be notified if reaching an areatrigger.'),
 ('debug bg',3,'Syntax: .debug bg\r\n\r\nToggle debug mode for battlegrounds. In debug mode GM can start battleground with single player.'),
 ('debug getitemvalue',3,'Syntax: .debug getitemvalue #itemguid #field [int|hex|bit|float]\r\n\r\nGet the field #field of the item #itemguid in your inventroy.\r\n\r\nUse type arg for set output format: int (decimal number), hex (hex value), bit (bitstring), float. By default use integer output.'),
-('debug getvalue',3,'Syntax: .debug getvalue #field [int|hex|bit|float]\r\n\r\nGet the field #field of the selected target. If no target is selected, get the content of your field.\r\n\r\nUse type arg for set output format: int (decimal number), hex (hex value), bit (bitstring), float. By default use integer output.'),
+('debug getvaluebyindex', 3, 'Syntax: .debug getvaluebyindex #field [int|hex|bit|float]\r\n\r\nGet the field index #field (integer) of the selected target. If no target is selected, get the content of your field.\r\n\r\nUse type arg for set output format: int (decimal number), hex (hex value), bit (bitstring), float. By default use integer output.'),
+('debug getvaluebyname', 3, 'Syntax: .debug getvaluebyname #field [int|hex|bit|float]\r\n\r\nGet the field name #field (string) of the selected target. If no target is selected, get the content of your field.\r\n\r\nUse type arg for set output format: int (decimal number), hex (hex value), bit (bitstring), float. By default use integer output.'),
 ('debug moditemvalue',3,'Syntax: .debug moditemvalue #guid #field [int|float| &= | |= | &=~ ] #value\r\n\r\nModify the field #field of the item #itemguid in your inventroy by value #value. \r\n\r\nUse type arg for set mode of modification: int (normal add/subtract #value as decimal number), float (add/subtract #value as float number), &= (bit and, set to 0 all bits in value if it not set to 1 in #value as hex number), |= (bit or, set to 1 all bits in value if it set to 1 in #value as hex number), &=~ (bit and not, set to 0 all bits in value if it set to 1 in #value as hex number). By default expect integer add/subtract.'),
 ('debug modvalue',3,'Syntax: .debug modvalue #field [int|float| &= | |= | &=~ ] #value\r\n\r\nModify the field #field of the selected target by value #value. If no target is selected, set the content of your field.\r\n\r\nUse type arg for set mode of modification: int (normal add/subtract #value as decimal number), float (add/subtract #value as float number), &= (bit and, set to 0 all bits in value if it not set to 1 in #value as hex number), |= (bit or, set to 1 all bits in value if it set to 1 in #value as hex number), &=~ (bit and not, set to 0 all bits in value if it set to 1 in #value as hex number). By default expect integer add/subtract.'),
 ('debug play cinematic',1,'Syntax: .debug play cinematic #cinematicid\r\n\r\nPlay cinematic #cinematicid for you. You stay at place while your mind fly.\r\n'),
 ('debug play sound',1,'Syntax: .debug play sound #soundid\r\n\r\nPlay sound with #soundid.\r\nSound will be play only for you. Other players do not hear this.\r\nWarning: client may have more 5000 sounds...'),
 ('debug setitemvalue',3,'Syntax: .debug setitemvalue #guid #field [int|hex|bit|float] #value\r\n\r\nSet the field #field of the item #itemguid in your inventroy to value #value.\r\n\r\nUse type arg for set input format: int (decimal number), hex (hex value), bit (bitstring), float. By default expect integer input format.'),
-('debug setvalue',3,'Syntax: .debug setvalue #field [int|hex|bit|float] #value\r\n\r\nSet the field #field of the selected target to value #value. If no target is selected, set the content of your field.\r\n\r\nUse type arg for set input format: int (decimal number), hex (hex value), bit (bitstring), float. By default expect integer input format.'),
+('debug setvaluebyindex', 3, 'Syntax: .debug setvaluebyindex #field [int|hex|bit|float] #value\r\n\r\nSet the field index #field (integer) of the selected target to value #value. If no target is selected, set the content of your field.\r\n\r\nUse type arg for set input format: int (decimal number), hex (hex value), bit (bitstring), float. By default expect integer input format.'),
+('debug setvaluebyname', 3, 'Syntax: .debug setvaluebyname #field [int|hex|bit|float] #value\r\n\r\nSet the field name #field (string) of the selected target to value #value. If no target is selected, set the content of your field.\r\n\r\nUse type arg for set input format: int (decimal number), hex (hex value), bit (bitstring), float. By default expect integer input format.'),
 ('debug spellcoefs',3,'Syntax: .debug spellcoefs #spellid\r\n\r\nShow default calculated and DB stored coefficients for direct/dot heal/damage.'),
 ('debug spellmods',3,'Syntax: .debug spellmods (flat|pct) #spellMaskBitIndex #spellModOp #value\r\n\r\nSet at client side spellmod affect for spell that have bit set with index #spellMaskBitIndex in spell family mask for values dependent from spellmod #spellModOp to #value.'),
 ('debug taxi',3,'Syntax: .debug taxi\r\n\r\nToggle debug mode for taxi flights. In debug mode GM receive additional on-screen information during taxi flights.'),
@@ -489,6 +492,7 @@ INSERT INTO `command` VALUES
 ('go object',1,'Syntax: .go object (#gameobject_guid|$gameobject_name|id #gameobject_id)\r\nTeleport your character to gameobject with guid #gameobject_guid, or teleport your character to gameobject with name including as part $gameobject_name substring, or teleport your character to a gameobject that was spawned from the template with this entry #gameobject_id.'),
 ('go taxinode',1,'Syntax: .go taxinode #taxinode\r\n\r\nTeleport player to taxinode coordinates. You can look up zone using .lookup taxinode $namepart'),
 ('go trigger',1,'Syntax: .go trigger (#trigger_id|$trigger_shift-link|$trigger_target_shift-link) [target]\r\n\r\nTeleport your character to areatrigger with id #trigger_id or trigger id associated with shift-link. If additional arg \"target\" provided then character will teleported to areatrigger target point.'),
+('go warp', 1,'Syntax: .go warp #axis #value\n\nTeleports the user by the specified value along the specified axis.\nUse a positive value to move forward the axis, and a negative value to move backward the axis.\nValid axis are x (+forward/-backward), y (+right/-left), z (+above/-below), o (orientation, value is specified in degrees).'),
 ('go xy',1,'Syntax: .go xy #x #y [#mapid]\r\n\r\nTeleport player to point with (#x,#y) coordinates at ground(water) level at map #mapid or same map if #mapid not provided.'),
 ('go xyz',1,'Syntax: .go xyz #x #y #z [#mapid]\r\n\r\nTeleport player to point with (#x,#y,#z) coordinates at ground(water) level at map #mapid or same map if #mapid not provided.'),
 ('go zonexy',1,'Syntax: .go zonexy #x #y [#zone]\r\n\r\nTeleport player to point with (#x,#y) client coordinates at ground(water) level in zone #zoneid or current zone if #zoneid not provided. You can look up zone using .lookup area $namepart'),
@@ -532,8 +536,9 @@ INSERT INTO `command` VALUES
 ('linkgrave',3,'Syntax: .linkgrave #graveyard_id [alliance|horde]\r\n\r\nLink current zone to graveyard for any (or alliance/horde faction ghosts). This let character ghost from zone teleport to graveyard after die if graveyard is nearest from linked to zone and accept ghost of this faction. Add only single graveyard at another map and only if no graveyards linked (or planned linked at same map).'),
 ('list creature',3,'Syntax: .list creature #creature_id [#max_count]\r\n\r\nOutput creatures with creature id #creature_id found in world. Output creature guids and coordinates sorted by distance from character. Will be output maximum #max_count creatures. If #max_count not provided use 10 as default value.'),
 ('list item',3,'Syntax: .list item #item_id [#max_count]\r\n\r\nOutput items with item id #item_id found in all character inventories, mails, auctions, and guild banks. Output item guids, item owner guid, owner account and owner name (guild name and guid in case guild bank). Will be output maximum #max_count items. If #max_count not provided use 10 as default value.'),
-('list object',3,'Syntax: .list object #gameobject_id [#max_count]\r\n\r\nOutput gameobjects with gameobject id #gameobject_id found in world. Output gameobject guids and coordinates sorted by distance from character. Will be output maximum #max_count gameobject. If #max_count not provided use 10 as default value.'),
+('list object', 3, 'Syntax: .list object #gameobject_id [#max_count]\r\n.list object #gameobject_id [world|zone|area|map] [#max_count]\r\nOutput gameobjects with gameobject id #gameobject_id found in world. Output gameobject guids and coordinates sorted by distance from character. Will be output maximum #max_count gameobject. If #max_count not provided use 200 as default value.'),
 ('list talents',3,'Syntax: .list talents\r\n\r\nShow list all really known (as learned spells) talent rank spells for selected player or self.'),
+('list areatriggers', 3, 'Syntax: .list areatriggers\n\nShow areatriggers within the same map (if inside an instanceable map) or area (if inside a continent) as the user.'),
 ('loadscripts',3,'Syntax: .loadscripts $scriptlibraryname\r\n\r\nUnload current and load the script library $scriptlibraryname or reload current if $scriptlibraryname omitted, in case you changed it while the server was running.'),
 ('lookup account email',2,'Syntax: .lookup account email $emailpart [#limit] \r\n\r\n Searchs accounts, which email including $emailpart with optional parametr #limit of results. If #limit not provided expected 100.'),
 ('lookup account ip',2,'Syntax: lookup account ip $ippart [#limit] \r\n\r\n Searchs accounts, which last used ip inluding $ippart (textual) with optional parametr #$limit of results. If #limit not provided expected 100.'),
@@ -976,13 +981,15 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `creature_spawn_data_template`;
 CREATE TABLE `creature_spawn_data_template` (
   `Entry` int unsigned NOT NULL COMMENT 'ID of template',
+  `NpcFlags` int NOT NULL DEFAULT '-1',
   `UnitFlags` bigint NOT NULL DEFAULT '-1',
   `Faction` int unsigned NOT NULL DEFAULT '0',
   `ModelId` mediumint unsigned NOT NULL DEFAULT '0',
   `EquipmentId` mediumint NOT NULL DEFAULT '0',
-  `CurHealth` int unsigned NOT NULL DEFAULT '1',
+  `CurHealth` int unsigned NOT NULL DEFAULT '0',
   `CurMana` int unsigned NOT NULL DEFAULT '0',
   `SpawnFlags` int unsigned NOT NULL DEFAULT '0',
+  `RelayId` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`Entry`,`UnitFlags`,`ModelId`,`EquipmentId`,`CurHealth`,`CurMana`,`SpawnFlags`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Creature System (Spawn Data Template)';
 
@@ -1232,16 +1239,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `creature_movement`;
 CREATE TABLE `creature_movement` (
-  `id` int(10) unsigned NOT NULL COMMENT 'Creature GUID',
-  `point` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `position_x` float NOT NULL DEFAULT '0',
-  `position_y` float NOT NULL DEFAULT '0',
-  `position_z` float NOT NULL DEFAULT '0',
-  `orientation` float NOT NULL DEFAULT '0',
-  `waittime` int(10) unsigned NOT NULL DEFAULT '0',
-  `script_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `comment` text,
-  PRIMARY KEY (`id`,`point`)
+  `Id` int(10) unsigned NOT NULL COMMENT 'Creature GUID',
+  `Point` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `PositionX` float NOT NULL DEFAULT '0',
+  `PositionY` float NOT NULL DEFAULT '0',
+  `PositionZ` float NOT NULL DEFAULT '0',
+  `Orientation` float NOT NULL DEFAULT '0',
+  `WaitTime` int(10) unsigned NOT NULL DEFAULT '0',
+  `ScriptId` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `Comment` text,
+  PRIMARY KEY (`Id`,`Point`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Creature System';
 
 --
@@ -1259,17 +1266,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `creature_movement_template`;
 CREATE TABLE `creature_movement_template` (
-  `entry` mediumint(8) unsigned NOT NULL COMMENT 'Creature entry',
-  `pathId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Path ID for entry',
-  `point` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `position_x` float NOT NULL DEFAULT '0',
-  `position_y` float NOT NULL DEFAULT '0',
-  `position_z` float NOT NULL DEFAULT '0',
-  `orientation` float NOT NULL DEFAULT '0',
-  `waittime` int(10) unsigned NOT NULL DEFAULT '0',
-  `script_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `comment` text,
-  PRIMARY KEY (`entry`,`pathId`,`point`)
+  `Entry` mediumint(8) unsigned NOT NULL COMMENT 'Creature entry',
+  `PathId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Path ID for entry',
+  `Point` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `PositionX` float NOT NULL DEFAULT '0',
+  `PositionY` float NOT NULL DEFAULT '0',
+  `PositionZ` float NOT NULL DEFAULT '0',
+  `Orientation` float NOT NULL DEFAULT '0',
+  `WaitTime` int(10) unsigned NOT NULL DEFAULT '0',
+  `ScriptId` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `Comment` text,
+  PRIMARY KEY (`Entry`,`PathId`,`Point`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Creature waypoint system';
 
 --
@@ -1413,7 +1420,10 @@ CREATE TABLE `creature_template` (
   `VendorTemplateId` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `EquipmentTemplateId` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `GossipMenuId` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `InteractionPauseTimer` INT(10) NOT NULL DEFAULT -1,
   `VisibilityDistanceType` TINYINT NOT NULL DEFAULT '0',
+  `CorpseDecay` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Time before corpse despawns',
+  `SpellList` INT NOT NULL DEFAULT '0' COMMENT 'creature_spell_list_entry',
   `AIName` char(64) NOT NULL DEFAULT '',
   `ScriptName` char(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`entry`)
@@ -1426,7 +1436,7 @@ CREATE TABLE `creature_template` (
 LOCK TABLES `creature_template` WRITE;
 /*!40000 ALTER TABLE `creature_template` DISABLE KEYS */;
 INSERT INTO `creature_template` VALUES
-(1,'Waypoint (Only GM can see it)','Visual',NULL,1,1,0,10045,0,0,0,35,1,8,8,1,1,0,0,4096,0,130,5242886,0.91,1.14286,20,0,0,0,0,0,0,-1,1,1,1,1,1,1,8,8,0,0,7,7,1.76,2.42,0,3,100,2000,2200,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'','');
+(1,'Waypoint (Only GM can see it)','Visual',NULL,1,1,0,10045,0,0,0,35,1,8,8,1,1,0,0,4096,0,130,5242886,0.91,1.14286,20,0,0,0,0,0,0,-1,1,1,1,1,1,1,8,8,0,0,7,7,1.76,2.42,0,3,100,2000,2200,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'','');
 /*!40000 ALTER TABLE `creature_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1493,6 +1503,67 @@ CREATE TABLE creature_cooldowns (
   `CooldownMin` int(10) unsigned NOT NULL,
   `CooldownMax` int(10) unsigned NOT NULL,
   PRIMARY KEY (`entry`, `SpellId`)
+);
+
+DROP TABLE IF EXISTS `creature_spell_list_entry`;
+CREATE TABLE `creature_spell_list_entry` (
+Id INT NOT NULL COMMENT 'List ID',
+Name VARCHAR(200) NOT NULL COMMENT 'Description of usage',
+ChanceSupportAction INT NOT NULL COMMENT 'Chance of support action per tick',
+ChanceRangedAttack INT NOT NULL COMMENT 'Chance of ranged attack per tick',
+PRIMARY KEY(Id)
+);
+
+DROP TABLE IF EXISTS `creature_spell_list`;
+CREATE TABLE `creature_spell_list` (
+Id INT NOT NULL COMMENT 'List ID',
+Position INT NOT NULL COMMENT 'Position on list',
+SpellId INT NOT NULL COMMENT 'Spell ID',
+Flags INT NOT NULL COMMENT 'Spell Flags',
+TargetId INT NOT NULL COMMENT 'Targeting ID',
+ScriptId INT NOT NULL COMMENT 'Dbscript to be launched on success',
+Availability INT NOT NULL COMMENT 'Chance on spawn for spell to be included',
+Probability INT NOT NULL COMMENT 'Weight of spell when multiple are available',
+InitialMin INT NOT NULL COMMENT 'Initial delay minimum',
+InitialMax INT NOT NULL COMMENT 'Initial delay maximum',
+RepeatMin INT NOT NULL COMMENT 'Repeated delay minimum',
+RepeatMax INT NOT NULL COMMENT 'Repeated delay maximum',
+Comments VARCHAR(255) NOT NULL COMMENT 'Description of spell use',
+PRIMARY KEY(Id, Position)
+);
+
+DROP TABLE IF EXISTS `creature_spell_targeting`;
+CREATE TABLE `creature_spell_targeting` (
+Id INT NOT NULL COMMENT 'Targeting ID',
+Type INT NOT NULL COMMENT 'Type of targeting ID',
+Param1 INT NOT NULL COMMENT 'First parameter',
+Param2 INT NOT NULL COMMENT 'Second parameter',
+Param3 INT NOT NULL COMMENT 'Third parameter',
+Comments VARCHAR(255) NOT NULL COMMENT 'Description of target',
+PRIMARY KEY(Id)
+);
+
+LOCK TABLES `creature_spell_targeting` WRITE;
+INSERT INTO `creature_spell_targeting`(Id, Type, Param1, Param2, Param3, Comments) VALUES
+(0, 0, 0, 0, 0, 'Hardcoded - none'),
+(1, 0, 0, 0, 0, 'Hardcoded - current'),
+(2, 0, 0, 0, 0, 'Hardcoded - self'),
+(3, 0, 0, 0, 0, 'Hardcoded - eligible friendly dispel'),
+(4, 0, 0, 0, 0, 'Hardcoded - eligible friendly dispel - skip self'),
+(100, 1, 0, 0, 0x0002, 'Attack - random player');
+UNLOCK TABLES;
+
+--
+-- Table structure for table `creature_immunities`
+--
+
+DROP TABLE IF EXISTS `creature_immunities`;
+CREATE TABLE `creature_immunities`(
+`Entry` INT UNSIGNED NOT NULL COMMENT 'creature_template entry',
+`SetId` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'immunity set ID',
+`Type` TINYINT UNSIGNED NOT NULL COMMENT 'enum SpellImmunity',
+`Value` INT UNSIGNED NOT NULL COMMENT 'value depending on type',
+PRIMARY KEY(`Entry`,`SetId`,`Type`,`Value`)
 );
 
 --
@@ -1572,20 +1643,22 @@ CREATE TABLE `dbscripts_on_creature_movement` (
   `delay` int(10) unsigned NOT NULL DEFAULT '0',
   `priority` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `command` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `datalong` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `datalong` int(10) unsigned NOT NULL DEFAULT '0',
   `datalong2` int(10) unsigned NOT NULL DEFAULT '0',
   `datalong3` int(11) unsigned NOT NULL DEFAULT '0',
   `buddy_entry` int(10) unsigned NOT NULL DEFAULT '0',
   `search_radius` int(10) unsigned NOT NULL DEFAULT '0',
-  `data_flags` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `data_flags` int unsigned NOT NULL DEFAULT '0',
   `dataint` int(11) NOT NULL DEFAULT '0',
   `dataint2` int(11) NOT NULL DEFAULT '0',
   `dataint3` int(11) NOT NULL DEFAULT '0',
   `dataint4` int(11) NOT NULL DEFAULT '0',
+  `datafloat` float NOT NULL DEFAULT '0',
   `x` float NOT NULL DEFAULT '0',
   `y` float NOT NULL DEFAULT '0',
   `z` float NOT NULL DEFAULT '0',
   `o` float NOT NULL DEFAULT '0',
+  `speed` float NOT NULL DEFAULT '0',
   `condition_id` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
   `comments` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -2054,6 +2127,13 @@ LOCK TABLES `gameobject` WRITE;
 /*!40000 ALTER TABLE `gameobject` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `gameobject_spawn_entry`;
+CREATE TABLE `gameobject_spawn_entry`(
+`guid` INT UNSIGNED NOT NULL COMMENT 'Gameobject table guid',
+`entry` MEDIUMINT UNSIGNED NOT NULL COMMENT 'Gameobject Template entry',
+PRIMARY KEY(`guid`,`entry`)
+);
+
 --
 -- Table structure for table `gameobject_battleground`
 --
@@ -2196,6 +2276,16 @@ LOCK TABLES `gameobject_template` WRITE;
 /*!40000 ALTER TABLE `gameobject_template` DISABLE KEYS */;
 /*!40000 ALTER TABLE `gameobject_template` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `gameobject_template_addon`;
+CREATE TABLE `gameobject_template_addon`(
+`Entry` INT UNSIGNED NOT NULL COMMENT 'gameobject_template',
+`Artkit0` INT NOT NULL DEFAULT 0,
+`Artkit1` INT NOT NULL DEFAULT 0,
+`Artkit2` INT NOT NULL DEFAULT 0,
+`Artkit3` INT NOT NULL DEFAULT 0,
+PRIMARY KEY(entry)
+);
 
 --
 -- Table structure for table `gossip_menu`
@@ -3783,6 +3873,7 @@ INSERT INTO `mangos_string` VALUES
 (63,'Accepts whispers',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (64,'Doesn\'t accept whispers',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (66,'No script library loaded',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+(67,'|c00FFFFFF|Announce:',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (100,'Global notify: ',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (101,'Map: %u (%s) Zone: %u (%s) Area: %u (%s)\nX: %f Y: %f Z: %f Orientation: %f\ngrid[%u,%u]cell[%u,%u] InstanceID: %u\n ZoneX: %f ZoneY: %f\nGroundZ: %f FloorZ: %f Have height data (Map: %u VMap: %u)',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (102,'%s is already being teleported.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
@@ -3863,6 +3954,9 @@ INSERT INTO `mangos_string` VALUES
 (180,'(Password)',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (181,'There are no matching custom channels at the moment',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (182,'Listing up to %u custom channels matching criterea:',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+(183,'Areatrigger debugging turned on.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+(184,'Areatrigger debugging turned off.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+(185,'You have reached areatrigger %u.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (200,'No selection.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (201,'Object GUID is: %s',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (202,'The name was too long by %i characters.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
@@ -4226,6 +4320,7 @@ INSERT INTO `mangos_string` VALUES
 (570,'%s has uint32 value:[FIELD]:%u [VALUE]:%u',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (571,'Get %s float value:[FIELD]:%u [VALUE]:%f',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (572,'%s has float value:[FIELD]:%u [VALUE]:%f',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+(573,'Showing all areatriggers in %s %s:',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (575,'Modify %s uint32 field:%u to sum with:%i = %u (%i)',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (576,'You modify for %s uint32 field:%u to sum with:%i = %u (%i)',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (577,'You are now invisible.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
@@ -4323,6 +4418,7 @@ INSERT INTO `mangos_string` VALUES
 (712,'|cffff0000[BG Queue Announcer]:|r %s -- [%u-%u] A: %u/%u, H: %u/%u|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (713,'You must be level %u to join an arena team!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (715,'You don\'t meet Battleground level requirements',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+(716,'|cffff0000[Arena Queue Announcer]:|r %s -- [%uv%u] Started!|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (717,'|cffff0000[BG Queue Announcer]:|r %s -- [%u-%u] Started!|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (718,'|cffff0000[Arena Queue Announcer]:|r All Arenas -- Joined : %ux%u : %u|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 (719,'|cffff0000[Arena Queue Announcer]:|r All Arenas -- Exited : %ux%u : %u|r',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
@@ -4852,6 +4948,7 @@ CREATE TABLE `npc_vendor` (
   `item` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `maxcount` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `incrtime` int(10) unsigned NOT NULL DEFAULT '0',
+  `slot` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
   `ExtendedCost` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `condition_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`item`)
@@ -4876,6 +4973,7 @@ CREATE TABLE `npc_vendor_template` (
   `item` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `maxcount` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `incrtime` int(10) unsigned NOT NULL DEFAULT '0',
+  `slot` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
   `ExtendedCost` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `condition_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`item`)
@@ -10091,6 +10189,7 @@ UNLOCK TABLES;
 -- Table structure for table `playercreateinfo_skills`
 --
 
+DROP TABLE IF EXISTS `playercreateinfo_skills`;
 CREATE TABLE `playercreateinfo_skills` (
   `raceMask` int unsigned NOT NULL,
   `classMask` int unsigned NOT NULL,
@@ -12384,6 +12483,7 @@ CREATE TABLE `quest_template` (
   `Method` tinyint(3) unsigned NOT NULL DEFAULT '2',
   `ZoneOrSort` smallint(6) NOT NULL DEFAULT '0',
   `MinLevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `MaxLevel` tinyint(3) unsigned NOT NULL DEFAULT '255',
   `QuestLevel` smallint(6) NOT NULL DEFAULT '0',
   `Type` smallint(5) unsigned NOT NULL DEFAULT '0',
   `RequiredClasses` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -12405,6 +12505,7 @@ CREATE TABLE `quest_template` (
   `PrevQuestId` mediumint(9) NOT NULL DEFAULT '0',
   `NextQuestId` mediumint(9) NOT NULL DEFAULT '0',
   `ExclusiveGroup` mediumint(9) NOT NULL DEFAULT '0',
+  `BreadcrumbForQuestId` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
   `NextQuestInChain` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `SrcItemId` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `SrcItemCount` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -12677,17 +12778,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS script_waypoint;
 CREATE TABLE script_waypoint (
-  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'creature_template entry',
-  `pathId` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `pointid` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `position_x` float NOT NULL DEFAULT '0',
-  `position_y` float NOT NULL DEFAULT '0',
-  `position_z` float NOT NULL DEFAULT '0',
-  `orientation` float NOT NULL DEFAULT '0',
-  `waittime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'waittime in millisecs',
-  `script_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `comment` text,
-  PRIMARY KEY (entry, pathId, pointid)
+  `Entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'creature_template entry',
+  `PathId` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `Point` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `PositionX` float NOT NULL DEFAULT '0',
+  `PositionY` float NOT NULL DEFAULT '0',
+  `PositionZ` float NOT NULL DEFAULT '0',
+  `Orientation` float NOT NULL DEFAULT '0',
+  `WaitTime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'waittime in millisecs',
+  `ScriptId` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `Comment` text,
+  PRIMARY KEY (Entry, PathId, Point)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Script Creature waypoints';
 
 --
@@ -12827,6 +12928,70 @@ LOCK TABLES `skinning_loot_template` WRITE;
 /*!40000 ALTER TABLE `skinning_loot_template` DISABLE KEYS */;
 /*!40000 ALTER TABLE `skinning_loot_template` ENABLE KEYS */;
 UNLOCK TABLES;
+
+-- ----------------------------
+-- Table structure for spawn_group
+-- ----------------------------
+DROP TABLE IF EXISTS `spawn_group`;
+CREATE TABLE `spawn_group`  (
+  `Id` int(11) NOT NULL COMMENT 'Spawn Group ID',
+  `Name` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'Description of usage',
+  `Type` int(11) NOT NULL COMMENT 'Creature or GO spawn group',
+  `MaxCount` int(11) NOT NULL DEFAULT 0 COMMENT 'Maximum total count of all spawns in a group',
+  `WorldState` int(11) NOT NULL DEFAULT 0 COMMENT 'Worldstate which enables spawning of given group',
+  `Flags` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Flags for various behaviour',
+  PRIMARY KEY (`Id`)
+);
+
+-- ----------------------------
+-- Table structure for spawn_group_spawn
+-- ----------------------------
+DROP TABLE IF EXISTS `spawn_group_spawn`;
+CREATE TABLE `spawn_group_spawn`  (
+  `Id` int(11) NOT NULL COMMENT 'Spawn Group ID',
+  `Guid` int(11) NOT NULL COMMENT 'Guid of creature or GO',
+  `SlotId` tinyint(4) NOT NULL DEFAULT -1 COMMENT '0 is the leader, -1 not part of the formation',
+  `Chance` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Chance for a spawn to occur',
+  PRIMARY KEY (`Id`, `Guid`)
+);
+
+-- ----------------------------
+-- Table structure for spawn_group_entry
+-- ----------------------------
+DROP TABLE IF EXISTS `spawn_group_entry`;
+CREATE TABLE `spawn_group_entry`  (
+  `Id` int(11) NOT NULL COMMENT 'Spawn Group ID',
+  `Entry` int(11) NOT NULL COMMENT 'Entry of creature or GO',
+  `MinCount` int(11) NOT NULL DEFAULT 0 COMMENT 'Minimum count of entry in a group before random',
+  `MaxCount` int(11) NOT NULL DEFAULT 0 COMMENT 'Maximum total count of entry in a group',
+  `Chance` int(11) NOT NULL DEFAULT 0 COMMENT 'Chance for entry to be selected',
+  PRIMARY KEY (`Id`, `Entry`)
+);
+
+-- ----------------------------
+-- Table structure for spawn_group_formation
+-- ----------------------------
+DROP TABLE IF EXISTS `spawn_group_formation`;
+CREATE TABLE `spawn_group_formation`  (
+  `Id` int(11) NOT NULL COMMENT 'Spawn group id',
+  `FormationType` tinyint(11) NOT NULL DEFAULT 0 COMMENT 'Formation shape 0..6',
+  `FormationSpread` float(11, 0) NOT NULL DEFAULT 0 COMMENT 'Distance between formation members',
+  `FormationOptions` int(11) NOT NULL DEFAULT 0 COMMENT 'Keep formation compact (bit 1)',
+  `PathId` int(11) NOT NULL DEFAULT 0 COMMENT 'PathId from waypoint_path path',
+  `MovementType` tinyint(11) NOT NULL COMMENT 'Same as creature table',
+  `Comment` varchar(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ----------------------------
+-- Table structure for spawn_group_linked_group
+-- ----------------------------
+DROP TABLE IF EXISTS `spawn_group_linked_group`;
+CREATE TABLE `spawn_group_linked_group`  (
+  `Id` int(11) NOT NULL COMMENT 'Spawn Group ID',
+  `LinkedId` int(11) NOT NULL COMMENT 'Linked Spawn Group ID',
+  PRIMARY KEY (`Id`, `LinkedId`)
+);
 
 --
 -- Table structure for table `spam_records`
@@ -17036,6 +17201,124 @@ LOCK TABLES `transports` WRITE;
 /*!40000 ALTER TABLE `transports` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `warden_scans`;
+
+CREATE TABLE `warden_scans` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `type` int(2) DEFAULT '0',
+  `str` text,
+  `data` text,
+  `address` int(8) DEFAULT '0',
+  `length` int(2) DEFAULT '0',
+  `result` tinytext NOT NULL,
+  `flags` smallint(5) unsigned NOT NULL,
+  `comment` tinytext NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;
+
+/*Data for the table `warden_scans` */
+
+insert  into `warden_scans`(`id`,`type`,`str`,`data`,`address`,`length`,`result`,`flags`,`comment`) values 
+(1,2,NULL,'82D7E5CBC8D2F78A791E189BAB3FD5D4342BF7EB0CA3F129',74044,NULL,'0',2,'Cheat Engine dll'),
+(2,2,NULL,'A444519CC419521B6D39990C1D95329C8D94B59226CBAA98',16507,NULL,'0',2,'WPE PRO dll'),
+(3,2,NULL,'3A0F8985E701343E439C74B675C72BBE2D8810A745569913',372624,NULL,'0',2,'rPE dll'),
+(4,2,NULL,'6A006A00E897AC0100',7072,NULL,'1',2,'Warden packet process code search sanity check'),
+(5,1,'kernel32.dll',NULL,0,0,'1',2,'Warden module search bypass sanity check'),
+(6,1,'wpespy.dll',NULL,0,0,'0',2,'WPE Pro'),
+(7,1,'speedhack-i386.dll',NULL,0,0,'0',2,'CheatEngine'),
+(8,0,NULL,NULL,9093388,6,'686561646572',2,'Packet internal sign - \"header\"'),
+(9,0,NULL,NULL,9036012,6,'53595354454D',2,'Packet internal sign - \"SYSTEM\"'),
+(10,0,NULL,NULL,8100097,4,'C87A8F00',2,'Jump gravity reference'),
+(11,0,NULL,NULL,9403080,4,'D893FEC0',2,'Jump gravity value'),
+(12,0,NULL,NULL,8100083,4,'20007408',2,'Jump gravity water'),
+(13,0,NULL,NULL,6105764,5,'385F4D7412',2,'Anti root'),
+(14,0,NULL,NULL,6103822,1,'F8',2,'Anti move'),
+(15,0,NULL,NULL,8100062,1,'75',2,'Anti jump'),
+(16,0,NULL,NULL,8103104,3,'8B4F7C',2,'No fall damage'),
+(17,0,NULL,NULL,6525996,2,'7419',2,'Super fly'),
+(18,0,NULL,NULL,6106878,2,'7819',2,'Heartbeat interval speedhack'),
+(19,0,NULL,NULL,6403348,1,'F8',2,'Anti slow hack'),
+(20,0,NULL,NULL,6525986,7,'F745F800100000',2,'No fall damage'),
+(21,0,NULL,NULL,8099964,3,'100000',2,'Fly hack'),
+(22,1,'d3dhook.dll',NULL,0,0,'0',2,'CheatEngine D3D Hook'),
+(23,0,NULL,NULL,9208728,4,'BB8D243F',2,'Wall climb'),
+(24,0,NULL,NULL,8095957,3,'894808',2,'No fall damage'),
+(25,0,NULL,NULL,8979976,8,'000000E04D62503F',2,'Fly hack'),
+(26,0,NULL,NULL,6638471,1,'74',2,'Water walk'),
+(27,0,NULL,NULL,4685455,1,'74',2,'Hyper mode'),
+(28,0,NULL,NULL,4685480,1,'74',2,'Hyper mode'),
+(29,0,NULL,NULL,4685502,5,'E89DFD1D00',2,'Hyper mode'),
+(30,0,NULL,NULL,4685631,3,'8B450C',2,'Hyper mode'),
+(31,0,NULL,NULL,4685653,3,'8B5508',2,'Hyper mode'),
+(32,0,NULL,NULL,8100021,1,'6B',2,'Hyper mode'),
+(33,0,NULL,NULL,8100052,1,'4C',2,'Hyper mode'),
+(34,0,NULL,NULL,8100063,1,'41',2,'Hyper mode'),
+(35,0,NULL,NULL,8100078,1,'32',2,'Hyper mode'),
+(36,0,NULL,NULL,4760304,2,'721B',2,'P2Point Teleport'),
+(37,0,NULL,NULL,4840352,6,'558BEC833D40',2,'LuaProtectionOkay'),
+(38,1,'Maelstrom_Keys_Hook.dll',NULL,0,0,'0',2,'WoW Maelstrom keys hook'),
+(39,1,'Maelstrom_Mess_Hook.dll',NULL,0,0,'0',2,'WoW Maelstrom mess hook'),
+(40,0,NULL,NULL,6518444,2,'DECA',2,'Wow Maelstrom memory patch'),
+(41,0,NULL,NULL,6965758,4,'0F84B300',2,'WoW Admin Panel'),
+(46,0,NULL,NULL,4774481,3,'0F8465',2,'TranslatePatch'),
+(79,1,'SZATYOR.DLL',NULL,0,0,'0',2,'Packet Sniffer - Injected DLL'),
+(45,0,NULL,NULL,4653019,3,'83F803',2,'GlueXML_SignaturePatch'),
+(47,0,NULL,NULL,4785563,2,'7520',2,'LanguageRestriction'),
+(48,0,NULL,NULL,4840370,2,'7465',2,'Lua_Patch'),
+(49,0,NULL,NULL,4896176,5,'A1CCECC600',2,'GetCamera (Is this valid?)'),
+(50,0,NULL,NULL,4912512,2,'7460',2,'AFK Jump'),
+(51,0,NULL,NULL,4912599,2,'7509',2,'Anti AFK'),
+(52,0,NULL,NULL,5433092,2,'743C',2,'GlueXML_RenamePatch'),
+(53,0,NULL,NULL,5524941,2,'7F17',2,'Show levels'),
+(54,0,NULL,NULL,5634208,8,'558BEC568BF1837E',2,'SendPacket function hack'),
+(55,0,NULL,NULL,6160566,6,'8B80E0100000',2,'Tracking'),
+(56,0,NULL,NULL,6181252,6,'8BB1E4100000',2,'World Tracking'),
+(57,0,NULL,NULL,6321600,6,'8B81D40E0000',2,'GetModel (Is this valid?)'),
+(58,0,NULL,NULL,6377767,3,'0F8560',2,'NameplatePatch'),
+(59,0,NULL,NULL,6518444,2,'DECA',2,'Wallclimb'),
+(60,0,NULL,NULL,6559495,2,'8931',2,'TimeSetPatch'),
+(61,0,NULL,NULL,6563465,2,'F3A5',2,'TimeSetPatch 2'),
+(62,0,NULL,NULL,6583320,2,'7413',2,'Model Hack'),
+(63,0,NULL,NULL,6966126,4,'741D8B96',2,'Go through object'),
+(64,0,NULL,NULL,6998506,4,'750632C0',2,'Go through buildings'),
+(65,0,NULL,NULL,7146485,2,'FFD2',2,'Warden packet read'),
+(66,0,NULL,NULL,7641168,6,'8B0D14F8E100',2,'OsGetAsyncTimeMs (Is this valid?)'),
+(67,0,NULL,NULL,8095301,2,'7513',2,'Air Jump'),
+(68,0,NULL,NULL,8095954,3,'8B4908',2,'Teleport To Plane'),
+(69,0,NULL,NULL,8103107,3,'894E3C',2,'NoFallTime'),
+(70,0,NULL,NULL,8979979,5,'E04D62503F',2,'Hyper speed'),
+(71,0,NULL,NULL,9208732,4,'3630613F',2,'MountainClimbPatch'),
+(72,0,NULL,NULL,9208920,8,'000000C0854A3340',2,'Gravity 2'),
+(73,0,NULL,NULL,9208923,5,'C0854A3340',2,'Gravity'),
+(74,0,NULL,NULL,12339960,4,'8E977042',2,'Fall speed'),
+(75,1,'ICANHAZSPEED.DLL',NULL,0,0,'0',2,'ICanHazSpeed - Injected DLL'),
+(76,1,'RPE.DLL',NULL,0,0,'0',2,'rEdoX Packet Editor'),
+(77,1,'SETPRIV.DLL',NULL,0,0,'0',2,'HideToolz - Injected DLL'),
+(78,1,'SPEEDHACK.DLL',NULL,0,0,'0',2,'Cheat Engine - Injected DLL'),
+(80,1,'TAMIA.DLL',NULL,0,0,'0',2,'Tamia hack'),
+(81,1,'WHIFF.DLL',NULL,0,0,'0',2,'Packet Sniffer - Injected DLL'),
+(82,1,'AUTH_BYPASS.DLL',NULL,0,0,'0',2,'Namreeb Auth Password Bypass'),
+(83,2,NULL,'FCBDF405450081C6FF3F000081E600C0FFFF8B', '6404', NULL, '0', '2', 'Wow Maelstrom keys hook DLL pattern'),
+(84,2,NULL,'80E6FFFF568BCB0FB745FE66BA3C00E8', '38544', NULL, '0', '2', 'Wow Maelstrom mess hook DLL pattern');
+
+--
+-- Table structure for table `waypoint_path`
+--
+
+DROP TABLE IF EXISTS `waypoint_path`;
+CREATE TABLE `waypoint_path`  (
+  `PathId` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Unique path id',
+  `Point` mediumint(8) UNSIGNED NOT NULL DEFAULT 0,
+  `PositionX` float NOT NULL DEFAULT 0,
+  `PositionY` float NOT NULL DEFAULT 0,
+  `PositionZ` float NOT NULL DEFAULT 0,
+  `Orientation` float NOT NULL DEFAULT 0,
+  `WaitTime` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `ScriptId` mediumint(8) UNSIGNED NOT NULL DEFAULT 0,
+  `Comment` text NULL DEFAULT NULL,
+  PRIMARY KEY (`PathId`, `Point`)
+);
+
 --
 -- Table structure for table `world_safe_locs`
 --
@@ -17051,6 +17334,16 @@ CREATE TABLE `world_safe_locs` (
    `name` varchar(50) NOT NULL DEFAULT '',
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `worldstate_name`
+--
+
+CREATE TABLE worldstate_name (
+`Id` INT(11) NOT NULL COMMENT 'Worldstate variable Id',
+`Name` VARCHAR(200) NOT NULL COMMENT 'Name and use of variable',
+PRIMARY KEY(`Id`)
+);
 
 --
 -- Table structure for table `world_template`

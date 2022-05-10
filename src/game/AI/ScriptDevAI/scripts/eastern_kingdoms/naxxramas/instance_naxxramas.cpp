@@ -165,12 +165,6 @@ void instance_naxxramas::OnCreatureCreate(Creature* creature)
         case NPC_ZOMBIE_CHOW:
         {
             m_zombieChowList.push_back(creature->GetObjectGuid());
-            creature->SetInCombatWithZone();
-            break;
-        }
-        case NPC_CORPSE_SCARAB:
-        {
-            creature->SetInCombatWithZone();
             break;
         }
         case NPC_NAXXRAMAS_CULTIST:
@@ -205,12 +199,10 @@ void instance_naxxramas::OnCreatureCreate(Creature* creature)
                             return;
                     }
                 }
-                creature->SetInCombatWithZone();
             }
             break;
         case NPC_GUARDIAN:
             m_icrecrownGuardianList.push_back(creature->GetObjectGuid());
-            creature->SetInCombatWithZone();
             break;
     }
 }
@@ -391,6 +383,24 @@ void instance_naxxramas::OnCreatureDeath(Creature* creature)
             creature->ForcedDespawn(2000);
             break;
         default:
+            break;
+    }
+}
+
+void instance_naxxramas::OnCreatureRespawn(Creature* creature)
+{
+    switch (creature->GetEntry())
+    {
+        case NPC_SOUL_WEAVER:
+        case NPC_UNSTOPPABLE_ABOM:
+        case NPC_SOLDIER_FROZEN:
+            if (!creature->IsTemporarySummon())
+                break;
+            [[fallthrough]];
+        case NPC_ZOMBIE_CHOW:
+        case NPC_GUARDIAN:
+        case NPC_CORPSE_SCARAB:
+            creature->SetInCombatWithZone();
             break;
     }
 }
@@ -1023,14 +1033,13 @@ bool instance_naxxramas::DoHandleEvent(uint32 eventId)
                             zombie->AttackStop();
                             zombie->SetTarget(nullptr);
                             zombie->AI()->DoResetThreat();
-                            zombie->GetMotionMaster()->Clear();
-                            zombie->SetWalk(true);
-                            zombie->GetMotionMaster()->MoveFollow(gluth, ATTACK_DISTANCE, 0);
+                            zombie->GetMotionMaster()->MovePoint(0, gluth->GetPositionX(), gluth->GetPositionY(), gluth->GetPositionZ());
                         }
                     }
                 }
-                return true;
+                return false;
             }
+            return true;
         case EVENT_CLEAR_SHACKLES:
             m_shackledGuardians = 0;
             m_checkGuardiansTimer = 2 * IN_MILLISECONDS;    // Check every two seconds how many Guardians of Icecrown are shackled
@@ -1125,7 +1134,7 @@ struct npc_stoneskin_gargoyleAI : public ScriptedAI
 
     void Aggro(Unit*) override
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_SPAWNING))
         {
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetImmuneToPlayer(false);
@@ -1164,6 +1173,31 @@ struct npc_stoneskin_gargoyleAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
+};
+
+/*###################
+#   npc_living_poison
+###################*/
+
+struct npc_living_poisonAI : public ScriptedAI
+{
+    npc_living_poisonAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
+
+    void Reset() override
+    {
+        SetMeleeEnabled(false);
+    }
+
+    // Any time a player comes close to the Living Poison, it will explode and kill itself while doing heavy AoE damage to the player
+    void MoveInLineOfSight(Unit* who) override
+    {
+        if (m_creature->GetDistance2d(who->GetPositionX(), who->GetPositionY(), DIST_CALC_BOUNDING_RADIUS) > 4.0f)
+            return;
+
+        DoCastSpellIfCan(m_creature, SPELL_EXPLODE, CAST_TRIGGERED);
+    }
+
+    void AttackStart(Unit* /*who*/) override {}
 };
 
 bool instance_naxxramas::DoHandleAreaTrigger(AreaTriggerEntry const* areaTrigger)
@@ -1234,6 +1268,11 @@ void AddSC_instance_naxxramas()
     newScript = new Script;
     newScript->Name = "npc_stoneskin_gargoyle";
     newScript->GetAI = &GetNewAIInstance<npc_stoneskin_gargoyleAI>;
+    newScript->RegisterSelf();
+
+    newScript = new Script;
+    newScript->Name = "npc_living_poison";
+    newScript->GetAI = &GetNewAIInstance<npc_living_poisonAI>;
     newScript->RegisterSelf();
 
     newScript = new Script;

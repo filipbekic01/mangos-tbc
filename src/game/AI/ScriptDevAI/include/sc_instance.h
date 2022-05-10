@@ -34,7 +34,7 @@ class ScriptedInstance : public InstanceData
         ~ScriptedInstance() {}
 
         // Default accessor functions
-        GameObject* GetSingleGameObjectFromStorage(uint32 entry) const;
+        GameObject* GetSingleGameObjectFromStorage(uint32 entry, bool skipDebugLog = false) const;
         Creature* GetSingleCreatureFromStorage(uint32 entry, bool skipDebugLog = false) const;
         void GetCreatureGuidVectorFromStorage(uint32 entry, GuidVector& entryGuidVector, bool skipDebugLog = false) const;
         void GetGameObjectGuidVectorFromStorage(uint32 entry, GuidVector& entryGuidVector, bool skipDebugLog = false) const;
@@ -65,8 +65,11 @@ class ScriptedInstance : public InstanceData
             DoOrSimulateScriptTextForMap(textEntry, creatureEntry, instance, GetSingleCreatureFromStorage(creatureEntry, true));
         }
 
+        void BanPlayersIfNoGm(const std::string& reason);
+
     protected:
         void DespawnGuids(GuidVector& spawns); // despawns all creature guids and clears contents
+        void RespawnDbGuids(std::vector<uint32>& spawns, uint32 respawnDelay); // respawns all dbguid creatures
 
         // Storage for GO-Guids and NPC-Guids
         EntryGuidMap m_goEntryGuidStore;                   // Store unique GO-Guids by entry
@@ -118,6 +121,9 @@ class DialogueHelper
         void StartNextDialogueText(int32 textEntry);
 
         void DialogueUpdate(uint32 diff);
+
+        // for use on death or respawn applicably
+        void DisableDialogue() { m_timer = 0; }
 
     protected:
         /// Will be called when a dialogue step was done

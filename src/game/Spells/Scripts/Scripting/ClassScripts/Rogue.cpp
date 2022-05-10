@@ -18,7 +18,8 @@
 
 #include "Spells/Scripts/SpellScript.h"
 
-struct spell_preparation : public SpellScript
+// 14185 - Preparation
+struct Preparation : public SpellScript
 {
     void OnEffectExecute(Spell* spell, SpellEffectIndex effIdx) const override
     {
@@ -40,6 +41,7 @@ enum
 };
 
 // Warning: Also currently used by Prowl
+// 1784 - Stealth
 struct Stealth : public AuraScript
 {
     bool OnCheckProc(Aura* /*aura*/, ProcExecutionData& data) const override // per 1.12.0 patch notes - no other indication of how it works
@@ -59,8 +61,49 @@ struct Stealth : public AuraScript
     }
 };
 
+void CastHighestStealthRank(Unit* caster)
+{
+    if (!caster->IsPlayer())
+        return;
+
+    // get highest rank of the Stealth spell
+    uint32 spellId = static_cast<Player*>(caster)->LookupHighestLearnedRank(1784);
+    if (!spellId)
+        return;
+    SpellEntry const* stealthSpellEntry = sSpellTemplate.LookupEntry<SpellEntry>(spellId);
+    // no Stealth spell found
+    if (!stealthSpellEntry)
+        return;
+
+    // reset cooldown on it if needed
+    if (!caster->IsSpellReady(*stealthSpellEntry))
+        caster->RemoveSpellCooldown(*stealthSpellEntry);
+
+    caster->CastSpell(nullptr, stealthSpellEntry, TRIGGERED_OLD_TRIGGERED);
+}
+
+// 1856 - Vanish
+struct VanishRogue : public SpellScript
+{
+    void OnCast(Spell* spell) const override
+    {
+        CastHighestStealthRank(spell->GetCaster());
+    }
+};
+
+// 13983 - Setup
+struct SetupRogue : public AuraScript
+{
+    bool OnCheckProc(Aura* /*aura*/, ProcExecutionData& data) const override
+    {
+        return data.victim->GetTarget() == data.attacker;
+    }
+};
+
 void LoadRogueScripts()
 {
-    RegisterSpellScript<spell_preparation>("spell_preparation");
-    RegisterAuraScript<Stealth>("spell_stealth");
+    RegisterSpellScript<Preparation>("spell_preparation");
+    RegisterSpellScript<Stealth>("spell_stealth");
+    RegisterSpellScript<VanishRogue>("spell_vanish");
+    RegisterSpellScript<SetupRogue>("spell_setup_rogue");
 }

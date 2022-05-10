@@ -31,8 +31,14 @@ extern void AddSC_spell_scripts();
 extern void AddSC_world_map_scripts();
 extern void AddSC_boss_highlord_kruul();
 extern void AddSC_war_effort();
+extern void AddSC_scourge_invasion();
+extern void AddSC_lunar_festival();
 extern void AddSC_suns_reach_reclamation();
 extern void AddSC_shade_of_the_horseman();
+extern void AddSC_childrens_week_tbc();
+extern void AddSC_midsummer_festival();
+extern void AddSC_hallows_end();
+extern void AddSC_brewfest();
 
 // eastern kingdoms
 extern void AddSC_blackrock_depths();                       // blackrock_depths
@@ -136,6 +142,7 @@ extern void AddSC_boss_kalecgos();
 extern void AddSC_boss_kiljaeden();
 extern void AddSC_boss_muru();
 extern void AddSC_instance_sunwell_plateau();
+extern void AddSC_sunwell_plateau();
 extern void AddSC_boss_archaedas();                         // uldaman
 extern void AddSC_instance_uldaman();
 extern void AddSC_uldaman();
@@ -149,9 +156,7 @@ extern void AddSC_zulaman();
 extern void AddSC_boss_zuljin();
 extern void AddSC_boss_arlokk();                            // zulgurub
 extern void AddSC_boss_hakkar();
-extern void AddSC_boss_hazzarah();
 extern void AddSC_boss_jeklik();
-extern void AddSC_boss_jindo();
 extern void AddSC_boss_mandokir();
 extern void AddSC_boss_marli();
 extern void AddSC_boss_ouro();
@@ -391,8 +396,14 @@ void AddScripts()
     AddSC_world_map_scripts();
     AddSC_boss_highlord_kruul();
     AddSC_war_effort();
+    AddSC_scourge_invasion();
+    AddSC_lunar_festival();
     AddSC_suns_reach_reclamation();
     AddSC_shade_of_the_horseman();
+    AddSC_childrens_week_tbc();
+    AddSC_midsummer_festival();
+    AddSC_hallows_end();
+    AddSC_brewfest();
 
     // eastern kingdoms
     AddSC_blackrock_depths();                               // blackrock_depths
@@ -496,6 +507,7 @@ void AddScripts()
     AddSC_boss_kiljaeden();
     AddSC_boss_muru();
     AddSC_instance_sunwell_plateau();
+    AddSC_sunwell_plateau();
     AddSC_boss_archaedas();                                 // uldaman
     AddSC_instance_uldaman();
     AddSC_uldaman();
@@ -509,9 +521,7 @@ void AddScripts()
     AddSC_boss_zuljin();
     AddSC_boss_arlokk();                                    // zulgurub
     AddSC_boss_hakkar();
-    AddSC_boss_hazzarah();
     AddSC_boss_jeklik();
-    AddSC_boss_jindo();
     AddSC_boss_mandokir();
     AddSC_boss_marli();
     AddSC_boss_ouro();

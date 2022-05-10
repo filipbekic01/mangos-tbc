@@ -97,7 +97,7 @@ enum SpellTarget
     TARGET_LOCATION_CASTER_RANDOM_CIRCUMFERENCE        = 73,
     TARGET_LOCATION_UNIT_RANDOM_SIDE                   = 74,
     TARGET_LOCATION_UNIT_RANDOM_CIRCUMFERENCE          = 75,
-    TARGET_LOCATION_DYNOBJ_POSITION                    = 76,
+    TARGET_LOCATION_CHANNEL_TARGET_DEST                = 76,
     TARGET_UNIT_CHANNEL_TARGET                         = 77,
     TARGET_LOCATION_NORTH                              = 78,
     TARGET_LOCATION_SOUTH                              = 79,
@@ -190,6 +190,15 @@ enum SpellTargetFilterScheme
     SCHEME_FURTHEST,
     SCHEME_HIGHEST_HP,
     SCHEME_LOWEST_HP_CHAIN,
+    SCHEME_PRIORITIZE_HEALTH,
+    SCHEME_PRIORITIZE_MANA,
+};
+
+enum SpellTargetLOS
+{
+    TARGET_LOS_CASTER           = 0,
+    TARGET_LOS_SRC,
+    TARGET_LOS_DEST,
 };
 
 #endif

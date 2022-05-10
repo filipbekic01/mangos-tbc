@@ -103,7 +103,7 @@ struct boss_leotheras_the_blindAI : public CombatAI
         AddCustomAction(LEOTHERAS_PHASE_TRANSITION, true, [&]() { HandlePhaseTransition(); });
         m_creature->GetCombatManager().SetLeashingCheck([&](Unit*, float x, float y, float /*z*/)
         {
-            return !(x > 298.0f && x < 411.0f && y > -526.0f &&  y < -299.0f);
+            return !(x > 290.0f && x < 411.0f && y > -526.0f &&  y < -299.0f);
         });
     }
 
@@ -538,8 +538,8 @@ void AddSC_boss_leotheras_the_blind()
     pNewScript->GetAI = &GetNewAIInstance<npc_inner_demonAI>;
     pNewScript->RegisterSelf();
 
-    RegisterScript<InsidiousWhisper>("spell_insidious_whisper");
+    RegisterSpellScript<InsidiousWhisper>("spell_insidious_whisper");
     RegisterSpellScript<ClearConsumingMadness>("spell_clear_consuming_madness");
-    RegisterAuraScript<LeoWhirlwindAura>("spell_leotheras_whirlwind_aura");
+    RegisterSpellScript<LeoWhirlwindAura>("spell_leotheras_whirlwind_aura");
     RegisterSpellScript<LeoWhirlwindProc>("spell_leotheras_whirlwind_proc");
 }

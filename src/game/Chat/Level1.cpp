@@ -37,6 +37,7 @@
 #include "Mails/Mail.h"
 #include "Util.h"
 #include "AI/ScriptDevAI/ScriptDevAIMgr.h"
+#include "Anticheat/Anticheat.hpp"
 #include "Spells/SpellMgr.h"
 #include "Entities/Transports.h"
 #ifdef _DEBUG_VMAPS
@@ -346,9 +347,8 @@ bool ChatHandler::HandleGPSCommand(char* args)
 
     if (GenericTransport* transport = obj->GetTransport())
     {
-        Position pos;
-        obj->GetPosition(pos.x, pos.y, pos.z, transport);
-        PSendSysMessage("Transport coords: %f %f %f", pos.x, pos.y, pos.z);
+        Position pos = obj->GetPosition(transport);
+        PSendSysMessage("Transport coords: %f %f %f %f", pos.x, pos.y, pos.z, pos.o);
     }
 
     DEBUG_LOG("Player %s GPS call for %s '%s' (%s: %u):",
@@ -830,7 +830,7 @@ bool ChatHandler::HandleModifyFactionCommand(char* args)
     {
         if (chr)
         {
-            uint32 factionid = chr->getFaction();
+            uint32 factionid = chr->GetFaction();
             uint32 flag      = chr->GetUInt32Value(UNIT_FIELD_FLAGS);
             uint32 npcflag   = chr->GetUInt32Value(UNIT_NPC_FLAGS);
             uint32 dyflag    = chr->GetUInt32Value(UNIT_DYNAMIC_FLAGS);
@@ -949,7 +949,7 @@ bool ChatHandler::HandleModifyASpeedCommand(char* args)
 
     float modSpeed = (float)atof(args);
 
-    if (modSpeed > 10 || modSpeed < 0.1)
+    if (modSpeed > 50 || modSpeed < 0.1)
     {
         SendSysMessage(LANG_BAD_VALUE);
         SetSentErrorMessage(true);
@@ -997,7 +997,7 @@ bool ChatHandler::HandleModifySpeedCommand(char* args)
 
     float modSpeed = (float)atof(args);
 
-    if (modSpeed > 10 || modSpeed < 0.1)
+    if (modSpeed > 50 || modSpeed < 0.1)
     {
         SendSysMessage(LANG_BAD_VALUE);
         SetSentErrorMessage(true);
@@ -1042,7 +1042,7 @@ bool ChatHandler::HandleModifySwimCommand(char* args)
 
     float modSpeed = (float)atof(args);
 
-    if (modSpeed > 10.0f || modSpeed < 0.01f)
+    if (modSpeed > 50.0f || modSpeed < 0.01f)
     {
         SendSysMessage(LANG_BAD_VALUE);
         SetSentErrorMessage(true);
@@ -1132,7 +1132,7 @@ bool ChatHandler::HandleModifyFlyCommand(char* args)
 
     float modSpeed = (float)atof(args);
 
-    if (modSpeed > 10.0f || modSpeed < 0.1f)
+    if (modSpeed > 50.0f || modSpeed < 0.1f)
     {
         SendSysMessage(LANG_BAD_VALUE);
         SetSentErrorMessage(true);
@@ -1724,7 +1724,7 @@ bool ChatHandler::HandleGoHelper(Player* player, uint32 mapid, float x, float y,
     }
     else
     {
-        // we need check x,y before ask Z or can crash at invalide coordinates
+        // we need check x,y before ask Z or can crash at invalid coordinates
         if (!MapManager::IsValidMapCoord(mapid, x, y))
         {
             PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
@@ -1831,7 +1831,10 @@ bool ChatHandler::HandleGoXYZCommand(char* args)
 
     Player* _player = m_session->GetPlayer();
 
-    char* px = strtok((char*)args, " ");
+    std::string argsStr(args);
+    std::replace(argsStr.begin(), argsStr.end(), ',', ' ');
+
+    char* px = strtok((char*)argsStr.c_str(), " ");
     char* py = strtok(nullptr, " ");
     char* pz = strtok(nullptr, " ");
     char* pmapid = strtok(nullptr, " ");
@@ -1937,6 +1940,62 @@ bool ChatHandler::HandleGoGridCommand(char* args)
     return HandleGoHelper(_player, mapid, x, y);
 }
 
+bool ChatHandler::HandleGoWarpCommand(char* args)
+{
+    if (!*args)
+        return false;
+
+    Player* player = m_session->GetPlayer();
+
+    char* arg1 = strtok((char*)args, " ");
+    char* arg2 = strtok(NULL, " ");
+
+    if (!arg1 || !arg2)
+        return false;
+
+    char dir = arg1[0];
+    int32 value = (int32)atoi(arg2);
+    float x = player->GetPositionX();
+    float y = player->GetPositionY();
+    float z = player->GetPositionZ();
+    float o = player->GetOrientation();
+
+    switch (dir)
+    {
+        case 'x':
+        {
+            x = x + cosf(o) * value;
+            y = y + sinf(o) * value;
+            break;
+        }
+        case 'y':
+        {
+            x = x + cos(o - (M_PI_F / 2)) * value;
+            y = y + sin(o - (M_PI_F / 2)) * value;
+            break;
+        }
+        case 'z':
+        {
+            z = z + value;
+            break;
+        }
+        case 'o':
+        {
+            o = o - (value * M_PI_F / 180.0f);
+            if (o < 0.0f)
+                o += value * M_PI_F;
+            else if (o > 2 * M_PI_F)
+                o -= value * M_PI_F;
+            break;
+        }
+        default:
+            return false;
+    }
+
+    player->NearTeleportTo(x, y, z, o);
+    return true;
+}
+
 bool ChatHandler::HandleModifyDrunkCommand(char* args)
 {
     if (!*args)    return false;
@@ -2013,7 +2072,7 @@ bool ChatHandler::ModifyMountCommandHelper(Player* target, char* args)
         slow = true;
     else
     {
-        const uint32 level = target->getLevel();
+        const uint32 level = target->GetLevel();
         fast = (level >= 60);
         slow = (!fast && level >= 30);
     }
@@ -2283,5 +2342,12 @@ bool ChatHandler::HandleChannelStaticCommand(char* args)
         PSendSysMessage(LANG_COMMAND_CHANNEL_STATIC_SUCCESS, channel->GetName().c_str(), GetMangosString((state ? LANG_ON : LANG_OFF)));
     }
 
+    return true;
+}
+
+bool ChatHandler::HandleReloadAnticheatCommand(char*)
+{
+    sAnticheatLib->Reload();
+    SendSysMessage(">> Anticheat data reloaded");
     return true;
 }
